@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraVilion - Minecraft Server</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script type="module">
+        // Import fungsi yang kamu butuhkan dari SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"; // Opsional, jika kamu ingin menggunakan Analytics
+
+        // Konfigurasi Firebase aplikasi web kamu
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4YNnmBQE2nkD0fCQ_LEI_WAwK51ItebY",
+            authDomain: "server-f20df.firebaseapp.com",
+            projectId: "server-f20df",
+            storageBucket: "server-f20df.firebasestorage.app",
+            messagingSenderId: "1042741872334",
+            appId: "1:1042741872334:web:11a4db80409a1568d9329f",
+            measurementId: "G-H4P26Y5SMK"
+        };
+
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // Inisialisasi Firestore
+        // const analytics = getAnalytics(app); // Inisialisasi Analytics (jika dibutuhkan)
+
+        // Membuat instance db dan serverTimestamp tersedia secara global agar bisa diakses oleh script.js
+        window.db = db;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="#home">TerraVilion</a>
+        </div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#store">Store</a></li>
+                <li><a href="#report-bug">Report Bug</a></li>
+                <li><a href="https://discord.gg/your-discord-link" target="_blank">Discord</a></li>
+            </ul>
+        </nav>
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </header>
+
+    <div class="mobile-nav-overlay">
+        <nav class="mobile-nav-links">
+            <ul>
+                <li><a href="#home" class="nav-close">Beranda</a></li>
+                <li><a href="#store" class="nav-close">Store</a></li>
+                <li><a href="#report-bug" class="nav-close">Report Bug</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main>
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <p class="tagline">Selamat Datang di TerraVilion:</p>
+                <h1 class="main-title">
+                    <span id="typed-text"></span>
+                </h1>
+                <p class="description">Jelajahi dunia fantasi tak terbatas, bangun kerajaan impianmu, dan bergabunglah dengan komunitas yang luar biasa.</p>
+                <div class="cta-buttons">
+                    <a href="#store" class="btn primary-btn">Mulai Bermain</a>
+                    <a href="https://discord.gg/your-discord-link" target="_blank" class="btn secondary-btn">Gabung Discord</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <div class="container">
+                <h2>Mengapa Memilih TerraVilion?</h2>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-hammer"></i>
+                        <h3>Survival Kreatif</h3>
+                        <p>Nikmati mode survival dengan sentuhan kreatif yang memungkinkan Anda berkreasi tanpa batas.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Komunitas Aktif</h3>
+                        <p>Bergabunglah dengan ribuan pemain lain dalam petualangan dan acara seru.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Anti-Griefing</h3>
+                        <p>Sistem perlindungan yang canggih untuk menjaga kreasi Anda tetap aman.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-magic"></i>
+                        <h3>Plugin Kustom</h3>
+                        <p>Rasakan pengalaman bermain yang unik dengan berbagai plugin kustom kami.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="store" class="store-section">
+            <div class="container">
+                <h2>TerraVilion Store</h2>
+                <p class="payment-info">Metode Pembayaran: DANA, QRIS, GoPay</p>
+
+                <h3>Ranks</h3>
+                <div class="rank-grid">
+                    <div class="rank-card">
+                        <h4>Epic</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Fitur Chat Color</li>
+                            <li><i class="fas fa-check-circle"></i> Private Warp</li>
+                            <li><i class="fas fa-check-circle"></i> Kit Epic</li>
+                        </ul>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="rank-card">
+                        <h4>Legend</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Fitur Chat Color</li>
+                            <li><i class="fas fa-check-circle"></i> Private Warp (2)</li>
+                            <li><i class="fas fa-check-circle"></i> Kit Legend</li>
+                            <li><i class="fas fa-check-circle"></i> Fly di Spawn</li>
+                        </ul>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="rank-card">
+                        <h4>Mythic</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Fitur Chat Color</li>
+                            <li><i class="fas fa-check-circle"></i> Private Warp (5)</li>
+                            <li><i class="fas fa-check-circle"></i> Kit Mythic</li>
+                            <li><i class="fas fa-check-circle"></i> Fly Dimana Saja</li>
+                            <li><i class="fas fa-check-circle"></i> Prefix Khusus</li>
+                        </ul>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="rank-card">
+                        <h4>VIP</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Akses VIP Area</li>
+                            <li><i class="fas fa-check-circle"></i> Priority Join</li>
+                        </ul>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="rank-card">
+                        <h4>Ultra</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Semua Fitur VIP</li>
+                            <li><i class="fas fa-check-circle"></i> Kit Ultra</li>
+                            <li><i class="fas fa-check-circle"></i> Diskon Khusus</li>
+                        </ul>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                </div>
+
+                <h3>Money</h3>
+                <div class="money-grid">
+                    <div class="money-card">
+                        <h4>1 Juta Coin</h4>
+                        <p>Harga: <span>Rp 5.000</span></p>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="money-card">
+                        <h4>2 Juta Coin</h4>
+                        <p>Harga: <span>Rp 10.000</span></p>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                    <div class="money-card">
+                        <h4>3 Juta Coin</h4>
+                        <p>Harga: <span>Rp 15.000</span></p>
+                        <button class="btn">Beli Sekarang</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="report-bug" class="report-bug-section">
+            <div class="container">
+                <h2>Laporkan Masalah</h2>
+                <p class="report-description">Bantu kami meningkatkan pengalaman bermain Anda dengan melaporkan bug, cheater, atau masalah lainnya. Tim kami akan segera meninjau laporan Anda.</p>
+                <form class="report-form" id="reportForm">
+                    <div class="form-group">
+                        <label for="reporter-name">Nama Pelapor:</label>
+                        <input type="text" id="reporter-name" name="reporterName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-type">Jenis Laporan:</label>
+                        <select id="report-type" name="reportType" required>
+                            <option value="">--Pilih Jenis Laporan--</option>
+                            <option value="bug">Bug</option>
+                            <option value="cheater">Cheater</option>
+                            <option value="grief">Griefing</option>
+                            <option value="other">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-description-text">Deskripsi Masalah:</label>
+                        <textarea id="report-description-text" name="reportDescription" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Kirim Laporan</button>
+                </form>
+                <div id="report-message" class="report-message"></div>
+
+                <div class="recent-reports-container">
+                    <h3>Laporan Terbaru</h3>
+                    <div id="recent-reports-list" class="report-cards-grid">
+                        <p class="loading-message">Memuat laporan...</p>
+                    </div>
+                    <p id="no-reports-message" class="loading-message" style="display: none;">Belum ada laporan.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>TerraVilion</h3>
+                    <p>&copy; 2025 All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Link Cepat</h4>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#store">Store</a></li>
+                        <li><a href="#report-bug">Report Bug</a></li>
+                        <li><a href="https://discord.gg/your-discord-link" target="_blank">Discord</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Ikuti Kami</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
