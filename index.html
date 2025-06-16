@@ -4,31 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixelRealm Minecraft Server</title>
+    <!-- Memuat Tailwind CSS dari CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat React dan ReactDOM dari CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Memuat Babel untuk transformasi JSX di browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Memuat font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Skrip inline untuk variabel global Firebase (lingkungan Canvas) -->
     <script>
         // Variabel-variabel ini disediakan oleh lingkungan Canvas dan dijadikan tersedia secara global
         window.__app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Konfigurasi Firebase Anda yang diperbarui
         window.__firebase_config = typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
-            apiKey: "AIzaSyC4YNnmBQE2nkD0fCQ_LEI_WAwK51ItebY",
-            authDomain: "server-f20df.firebaseapp.com",
-            projectId: "server-f20df",
-            storageBucket: "server-f20df.firebasestorage.app",
-            messagingSenderId: "1042741872334",
-            appId: "1:1042741872334:web:46394260dd589b20d9329f",
-            measurementId: "G-XY13D3RZMG"
+            apiKey: "AIzaSyDt9JHvJpLKnU3zI1uqOq3scOLIeiQSnl4",
+            authDomain: "minecraftweb-8fc71.firebaseapp.com",
+            projectId: "minecraftweb-8fc71",
+            storageBucket: "minecraftweb-8fc71.firebasestorage.app",
+            messagingSenderId: "190426156767",
+            appId: "1:190426156767:web:8ebe1a8ff6624e05a1e36a",
+            measurementId: "G-Q1F83E894W"
         });
         window.__initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     </script>
 
+    <!-- Memuat SDK Firebase menggunakan versi compat untuk akses global -->
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
+    <!-- CSS Kustom dan Animasi (disisipkan di sini) -->
     <style>
         /* CSS Kustom */
         * {
