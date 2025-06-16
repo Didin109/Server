@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelRealm Minecraft Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Variabel-variabel ini disediakan oleh lingkungan Canvas dan dijadikan tersedia secara global
+        window.__app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        window.__firebase_config = typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify({
+            apiKey: "AIzaSyC4YNnmBQE2nkD0fCQ_LEI_WAwK51ItebY",
+            authDomain: "server-f20df.firebaseapp.com",
+            projectId: "server-f20df",
+            storageBucket: "server-f20df.firebasestorage.app",
+            messagingSenderId: "1042741872334",
+            appId: "1:1042741872334:web:46394260dd589b20d9329f",
+            measurementId: "G-XY13D3RZMG"
+        });
+        window.__initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        /* CSS Kustom */
+        * {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Animasi fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 font-inter">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Mengakses variabel global dari objek window
+        const canvasAppId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof window.__firebase_config !== 'undefined' ? window.__firebase_config : '{}');
+        const initialAuthToken = typeof window.__initial_auth_token !== 'undefined' ? window.__initial_auth_token : null;
+
+        // Menginisialisasi Aplikasi Firebase
+        // Mengakses modul Firebase langsung dari objek 'firebase' global
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Komponen Utama Aplikasi
+        const App = () => {
+            // State untuk halaman saat ini, ID pengguna, dan status server
+            const [currentPage, setCurrentPage] = React.useState('beranda');
+            const [userId, setUserId] = React.useState(null);
+            const [serverStatus, setServerStatus] = React.useState('Offline'); // Placeholder untuk status server
+            const [isNavOpen, setIsNavOpen] = React.useState(false); // State untuk mengelola visibilitas navigasi di mobile
+
+            // Efek untuk Otentikasi Firebase dan Listener Firestore
+            React.useEffect(() => {
+                const authenticateFirebase = async () => {
+                    try {
+                        if (initialAuthToken) {
+                            await auth.signInWithCustomToken(initialAuthToken);
+                        } else {
+                            await auth.signInAnonymously();
+                        }
+                    } catch (error) {
+                        console.error("Kesalahan otentikasi Firebase:", error);
+                    }
+                };
+
+                authenticateFirebase();
+
+                // Mendengarkan perubahan status otentikasi
+                const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        setUserId(user.uid);
+                        console.log("Pengguna terotentikasi:", user.uid);
+                        // Mulai mendengarkan Firestore setelah otentikasi
+                        const serverStatusDocRef = db.collection(`artifacts/${canvasAppId}/public/data/server_status`).doc('current');
+                        const unsubscribeFirestore = serverStatusDocRef.onSnapshot((docSnap) => {
+                            if (docSnap.exists) {
+                                setServerStatus(docSnap.data().status || 'Offline');
+                            } else {
+                                setServerStatus('Offline');
+                                console.log("Dokumen 'current' tidak ditemukan di koleksi 'server_status'.");
+                            }
+                        }, (error) => {
+                            console.error("Kesalahan saat mendengarkan status server:", error);
+                        });
+                        return () => unsubscribeFirestore(); // Bersihkan listener Firestore saat unmount/perubahan otentikasi
+                    } else {
+                        setUserId(null);
+                        setServerStatus('Offline'); // Reset status jika tidak terotentikasi
+                        console.log("Tidak ada pengguna yang terotentikasi.");
+                    }
+                });
+
+                return () => unsubscribeAuth(); // Bersihkan listener otentikasi saat komponen dilepas
+            }, []); // Array dependensi kosong berarti ini berjalan sekali saat mount
+
+            // Fungsi untuk merender halaman yang berbeda berdasarkan state `currentPage`
+            const renderPage = () => {
+                switch (currentPage) {
+                    case 'beranda':
+                        return <HomeSection userId={userId} serverStatus={serverStatus} />;
+                    case 'tentang':
+                        return <AboutSection />;
+                    case 'aturan':
+                        return <RulesSection />;
+                    case 'bergabung':
+                        return <JoinSection />;
+                    case 'ide-bangunan':
+                        return <BuildIdeasSection />;
+                    case 'toko':
+                        return <StoreSection />;
+                    case 'lapor-bug':
+                        return <ReportBugSection userId={userId} />;
+                    case 'ide-event':
+                        return <EventIdeasSection />;
+                    default:
+                        return <HomeSection userId={userId} serverStatus={serverStatus} />;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 text-white font-inter">
+                    {/* Bilah Navigasi */}
+                    <nav className="bg-gray-800 p-4 shadow-lg rounded-b-lg">
+                        <div className="container mx-auto flex flex-wrap justify-between items-center">
+                            <div className="flex items-center justify-between w-full md:w-auto">
+                                <div className="text-3xl font-bold text-green-400">
+                                    <span className="text-white">Pixel</span>Realm
+                                </div>
+                                {/* Tombol hamburger untuk mobile */}
+                                <button
+                                    className="md:hidden text-gray-300 hover:text-white focus:outline-none"
+                                    onClick={() => setIsNavOpen(!isNavOpen)}
+                                    aria-label="Toggle navigation"
+                                >
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        {isNavOpen ? (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        ) : (
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                        )}
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div
+                                className={`w-full md:flex md:items-center md:w-auto mt-4 md:mt-0 ${
+                                    isNavOpen ? 'block' : 'hidden'
+                                }`}
+                            >
+                                <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 items-center w-full">
+                                    <NavItem label="Beranda" onClick={() => { setCurrentPage('beranda'); setIsNavOpen(false); }} active={currentPage === 'beranda'} />
+                                    <NavItem label="Tentang Kami" onClick={() => { setCurrentPage('tentang'); setIsNavOpen(false); }} active={currentPage === 'tentang'} />
+                                    <NavItem label="Aturan" onClick={() => { setCurrentPage('aturan'); setIsNavOpen(false); }} active={currentPage === 'aturan'} />
+                                    <NavItem label="Bergabung" onClick={() => { setCurrentPage('bergabung'); setIsNavOpen(false); }} active={currentPage === 'bergabung'} />
+                                    <NavItem label="Ide Bangunan ✨" onClick={() => { setCurrentPage('ide-bangunan'); setIsNavOpen(false); }} active={currentPage === 'ide-bangunan'} />
+                                    <NavItem label="Toko 💎" onClick={() => { setCurrentPage('toko'); setIsNavOpen(false); }} active={currentPage === 'toko'} />
+                                    <NavItem label="Lapor Bug 🐛" onClick={() => { setCurrentPage('lapor-bug'); setIsNavOpen(false); }} active={currentPage === 'lapor-bug'} />
+                                    <NavItem label="Ide Event ⚡" onClick={() => { setCurrentPage('ide-event'); setIsNavOpen(false); }} active={currentPage === 'ide-event'} />
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Area Konten Utama */}
+                    <main className="container mx-auto py-8 px-4">
+                        {renderPage()}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-gray-800 p-6 text-center text-gray-400 mt-8 rounded-t-lg">
+                        <p>&copy; {new Date().getFullYear()} Server Minecraft PixelRealm. Semua Hak Dilindungi.</p>
+                        {userId && <p className="mt-2 text-sm">ID Pengguna Anda: <span className="font-mono text-blue-300 break-all">{userId}</span></p>}
+                    </footer>
+                </div>
+            );
+        };
+
+        // Komponen Item Navigasi yang Dapat Digunakan Kembali
+        const NavItem = ({ label, onClick, active }) => (
+            <button
+                onClick={onClick}
+                className={`w-full md:w-auto px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out
+                ${active
+                    ? 'bg-green-600 text-white shadow-lg transform scale-105'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white hover:shadow-md'
+                }`}
+            >
+                {label}
+            </button>
+        );
+
+        // Komponen Bagian Beranda
+        const HomeSection = ({ userId, serverStatus }) => (
+            <section className="bg-gray-800 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <h1 className="text-5xl font-extrabold text-center text-green-400 mb-6 drop-shadow-lg">
+                    Selamat Datang di PixelRealm!
+                </h1>
+                <p className="text-xl text-center text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Mulailah petualangan epik di server Minecraft kami yang dinamis. Bangun, jelajahi, dan taklukkan bersama teman-teman!
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    {/* Kartu Status Server */}
+                    <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600">
+                        <h2 className="text-3xl font-bold text-green-300 mb-4 flex items-center">
+                            <svg className="w-8 h-8 mr-2 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z" clipRule="evenodd"></path></svg>
+                            Status Server
+                        </h2>
+                        <p className="text-xl text-gray-200">Status: <span className={`font-bold ${serverStatus === 'Online' ? 'text-green-400' : 'text-red-400'}`}>{serverStatus}</span></p>
+                        <p className="text-sm text-gray-400 mt-2">
+                            (Status ini diambil dari Firestore dan dapat diperbarui oleh admin.)
+                        </p>
+                    </div>
+
+                    {/* Kartu Fitur */}
+                    <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600">
+                        <h2 className="text-3xl font-bold text-green-300 mb-4 flex items-center">
+                            <svg className="w-8 h-8 mr-2 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 7a2 2 0 00-2-2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z" /></svg>
+                            Fitur
+                        </h2>
+                        <ul className="list-disc list-inside text-gray-200 space-y-2">
+                            <li>Mode Survival & Kreatif</li>
+                            <li>Komunitas Ramah</li>
+                            <li>Plugin & Event Kustom</li>
+                            <li>Arena PvP</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="text-center">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition-transform duration-200 transform hover:scale-105">
+                        Gabung Discord Kami!
+                    </button>
+                </div>
+            </section>
+        );
+
+        // Komponen Bagian Tentang Kami
+        const AboutSection = () => (
+            <section className="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h1 className="text-4xl font-extrabold text-green-400 mb-6 text-center">Tentang PixelRealm</h1>
+                <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                    PixelRealm didirikan dengan visi untuk menciptakan komunitas Minecraft yang ramah dan menarik bagi pemain dari segala usia dan tingkat keahlian. Kami percaya dalam menumbuhkan kreativitas, kerja tim, dan persaingan yang sehat dalam lingkungan yang seimbang. Tim staf kami yang berdedikasi bekerja tanpa lelah untuk memastikan pengalaman bermain yang lancar, menyenangkan, dan adil untuk semua orang.
+                </p>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                    Mulai dari mini-game buatan kustom dan peta survival yang menantang hingga plot kreatif yang dinamis, selalu ada sesuatu yang baru untuk ditemukan. Bergabunglah dengan kami dan jadilah bagian dari keluarga kami yang terus berkembang!
+                </p>
+            </section>
+        );
+
+        // Komponen Bagian Aturan Server
+        const RulesSection = () => (
+            <section className="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h1 className="text-4xl font-extrabold text-green-400 mb-6 text-center">Aturan Server</h1>
+                <div className="text-lg text-gray-300 space-y-4">
+                    <p>Untuk memastikan pengalaman yang positif bagi semua pemain, harap patuhi aturan berikut:</p>
+                    <ul className="list-disc list-inside space-y-2">
+                        <li><strong>Bersikap Hormat:</strong> Perlakukan semua pemain dan staf dengan hormat. Tidak ada pelecehan, penindasan, atau ujaran kebencian.</li>
+                        <li><strong>Tidak Ada Griefing/Mencuri:</strong> Jangan merusak atau mencuri dari bangunan atau peti pemain lain.</li>
+                        <li><strong>Tidak Ada Cheating/Hacking:</strong> Penggunaan modifikasi klien atau peretasan yang tidak sah dilarang keras.</li>
+                        <li><strong>Tidak Ada Spamming:</strong> Jangan spam obrolan atau menggunakan huruf kapital berlebihan.</li>
+                        <li><strong>Gunakan Bahasa yang Pantas:</strong> Hindari sumpah serapah atau bahasa yang tidak pantas secara berlebihan.</li>
+                        <li><strong>Tidak Ada Iklan:</strong> Jangan mengiklankan server atau situs web lain.</li>
+                        <li><strong>Laporkan Masalah:</strong> Jika Anda menemukan masalah atau menyaksikan pelanggaran aturan, laporkan kepada anggota staf.</li>
+                    </ul>
+                    <p className="text-sm text-gray-400 italic">
+                        Pelanggaran aturan ini dapat mengakibatkan peringatan, larangan sementara, atau larangan permanen.
+                    </p>
+                </div>
+            </section>
+        );
+
+        // Komponen Bagian Cara Bergabung
+        const JoinSection = () => (
+            <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                <h1 className="text-4xl font-extrabold text-green-400 mb-6">Cara Bergabung dengan Server Kami</h1>
+                <div className="text-lg text-gray-300 space-y-6 max-w-2xl mx-auto">
+                    <p>Bergabung dengan PixelRealm sangat sederhana! Ikuti langkah-langkah ini untuk memulai petualangan Anda:</p>
+
+                    {/* Langkah 1 */}
+                    <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600">
+                        <h2 className="text-2xl font-bold text-green-300 mb-3">Langkah 1: Dapatkan Minecraft Java Edition</h2>
+                        <p>Pastikan Anda memiliki salinan asli Minecraft: Java Edition yang terinstal di komputer Anda.</p>
+                        <a
+                            href="https://www.minecraft.net/en-us/get-minecraft"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-200"
+                        >
+                            Unduh Minecraft
+                        </a>
+                    </div>
+
+                    {/* Langkah 2 */}
+                    <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600">
+                        <h2 className="text-2xl font-bold text-green-300 mb-3">Langkah 2: Tambahkan Server Kami</h2>
+                        <p className="mb-2">
+                            Buka Minecraft, klik "Multiplayer", lalu "Tambahkan Server".
+                        </p>
+                        <p className="text-xl font-mono bg-gray-900 p-3 rounded-md inline-block select-all">
+                            play.pixelrealm.com
+                        </p>
+                        <p className="mt-2 text-sm text-gray-400">
+                            (Ini adalah contoh alamat server. Ganti dengan IP/domain server Anda yang sebenarnya.)
+                        </p>
+                    </div>
+
+                    {/* Langkah 3 */}
+                    <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600">
+                        <h2 className="text-2xl font-bold text-green-300 mb-3">Langkah 3: Sambungkan dan Mainkan!</h2>
+                        <p>Pilih server kami dari daftar Anda dan klik "Gabung Server". Bersiaplah untuk petualangan!</p>
+                    </div>
+
+                    <p className="text-base text-gray-400 mt-8">
+                        Butuh bantuan? Gabung server Discord kami untuk dukungan dan interaksi komunitas!
+                    </p>
+                    <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition-transform duration-200 transform hover:scale-105">
+                        Gabung Discord
+                    </button>
+                </div>
+            </section>
+        );
+
+
+        // Komponen Bagian Ide Bangunan (dengan integrasi Gemini API)
+        const BuildIdeasSection = () => {
+            const [buildPrompt, setBuildPrompt] = React.useState('');
+            const [generatedIdea, setGeneratedIdea] = React.useState('');
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [error, setError] = React.useState(null);
+
+            const generateIdea = async () => {
+                setIsLoading(true);
+                setGeneratedIdea('');
+                setError(null);
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `Hasilkan ide bangunan Minecraft yang kreatif dan terperinci berdasarkan kata kunci/deskripsi berikut: "${buildPrompt}". Ide tersebut harus mencakup tema, beberapa fitur utama, dan kemungkinan palet blok. Buatlah ringkas, sekitar 100-150 kata.`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // Canvas akan otomatis menyediakan kunci API
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Panggilan API gagal dengan status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        setGeneratedIdea(text);
+                    } else {
+                        setGeneratedIdea("Tidak ada ide yang dihasilkan. Silakan coba lagi dengan kata kunci yang berbeda.");
+                    }
+                } catch (err) {
+                    console.error("Kesalahan saat menghasilkan ide bangunan:", err);
+                    setError("Gagal menghasilkan ide. Silakan coba lagi nanti. " + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                    <h1 className="text-4xl font-extrabold text-green-400 mb-6">Ide Bangunan Minecraft ✨</h1>
+                    <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+                        Kehabisan inspirasi? Biarkan generator bertenaga AI kami memberi Anda ide bangunan Minecraft yang unik!
+                        Cukup jelaskan apa yang Anda cari.
+                    </p>
+
+                    <div className="flex flex-col items-center space-y-4">
+                        <textarea
+                            className="w-full md:w-3/4 p-4 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                            rows="4"
+                            placeholder="misalnya, 'kota futuristik di langit', 'basis bawah tanah yang nyaman', 'kuil gurun'"
+                            value={buildPrompt}
+                            onChange={(e) => setBuildPrompt(e.target.value)}
+                        ></textarea>
+
+                        <button
+                            onClick={generateIdea}
+                            disabled={isLoading || !buildPrompt.trim()}
+                            className={`px-6 py-3 rounded-full text-xl font-bold shadow-lg transition-transform duration-200 transform hover:scale-105
+                                ${isLoading || !buildPrompt.trim()
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-green-600 hover:bg-green-700 text-white'
+                                }`}
+                        >
+                            {isLoading ? 'Menghasilkan Ide...' : 'Hasilkan Ide ✨'}
+                        </button>
+
+                        {error && (
+                            <div className="bg-red-700 text-white p-4 rounded-lg mt-4 w-full md:w-3/4">
+                                <p className="font-bold">Error:</p>
+                                <p>{error}</p>
+                            </div>
+                        )}
+
+                        {generatedIdea && (
+                            <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 mt-6 w-full md:w-3/4 text-left animate-fade-in">
+                                <h2 className="text-2xl font-bold text-green-300 mb-3">Ide Bangunan Anda:</h2>
+                                <p className="text-lg text-gray-200 whitespace-pre-wrap">{generatedIdea}</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            );
+        };
+
+        // Komponen Bagian Toko Baru
+        const StoreSection = () => {
+            const [storeItems, setStoreItems] = React.useState([]);
+            const [loadingItems, setLoadingItems] = React.useState(true);
+            const [errorItems, setErrorItems] = React.useState(null);
+
+            React.useEffect(() => {
+                const fetchStoreItems = () => {
+                    // Menggunakan canvasAppId untuk jalur Firestore
+                    const itemsCollectionRef = db.collection(`artifacts/${canvasAppId}/public/data/store_items`);
+                    const unsubscribe = itemsCollectionRef.onSnapshot((snapshot) => {
+                        const items = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        setStoreItems(items);
+                        setLoadingItems(false);
+                    }, (error) => {
+                        console.error("Error fetching store items:", error);
+                        setErrorItems("Gagal memuat item toko.");
+                        setLoadingItems(false);
+                    });
+                    return () => unsubscribe();
+                };
+
+                fetchStoreItems();
+            }, []);
+
+            const handleBuy = (item) => {
+                // Implementasi placeholder untuk pembelian
+                // Dalam aplikasi nyata, ini akan melibatkan logika pembayaran atau menambahkan item ke inventaris pemain.
+                alert(`Anda mencoba membeli ${item.name} seharga ${item.price} ${item.currency}. Ini adalah placeholder.`);
+                console.log(`Pembelian item: ${item.name}`);
+            };
+
+            if (loadingItems) {
+                return (
+                    <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                        <p className="text-xl text-green-400">Memuat item toko...</p>
+                    </section>
+                );
+            }
+
+            if (errorItems) {
+                return (
+                    <section className="bg-red-700 text-white p-8 rounded-xl shadow-lg text-center">
+                        <p className="font-bold">Error:</p>
+                        <p>{errorItems}</p>
+                    </section>
+                );
+            }
+
+            // Item toko dummy jika Firestore kosong atau untuk tampilan awal
+            const defaultStoreItems = [
+                {
+                    id: 'vip-rank',
+                    name: 'Peringkat VIP',
+                    description: 'Akses fitur eksklusif dan lencana VIP di server.',
+                    price: 100000,
+                    currency: 'IDR',
+                    imageUrl: 'https://placehold.co/150x150/00FF00/FFFFFF?text=VIP'
+                },
+                {
+                    id: 'mystery-crate',
+                    name: 'Peti Misteri',
+                    description: 'Dapatkan item acak langka dan kosmetik unik.',
+                    price: 50000,
+                    currency: 'IDR',
+                    imageUrl: 'https://placehold.co/150x150/8B4513/FFFFFF?text=CRATE'
+                },
+                {
+                    id: 'custom-prefix',
+                    name: 'Prefix Kustom',
+                    description: 'Dapatkan prefix nama Anda sendiri di obrolan server.',
+                    price: 75000,
+                    currency: 'IDR',
+                    imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=PREFIX'
+                },
+            ];
+
+            const itemsToDisplay = storeItems.length > 0 ? storeItems : defaultStoreItems;
+
+
+            return (
+                <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                    <h1 className="text-4xl font-extrabold text-green-400 mb-8">Toko PixelRealm 💎</h1>
+                    <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+                        Dukung server kami dan dapatkan item eksklusif yang akan memperkaya pengalaman bermain Minecraft Anda!
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {itemsToDisplay.map(item => (
+                            <div key={item.id} className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 flex flex-col items-center transform hover:scale-105 transition-transform duration-200">
+                                <img
+                                    src={item.imageUrl || `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`}
+                                    alt={item.name}
+                                    className="w-32 h-32 object-contain rounded-full mb-4 border-2 border-green-500"
+                                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`; }}
+                                />
+                                <h2 className="text-2xl font-bold text-green-300 mb-2">{item.name}</h2>
+                                <p className="text-gray-300 text-center mb-4 flex-grow">{item.description}</p>
+                                <p className="text-3xl font-extrabold text-yellow-400 mb-4">{item.price.toLocaleString('id-ID')} {item.currency}</p>
+                                <button
+                                    onClick={() => handleBuy(item)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full text-lg shadow-lg transition-transform duration-200"
+                                >
+                                    Beli Sekarang
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        // Komponen Bagian Lapor Bug Baru
+        const ReportBugSection = ({ userId }) => {
+            const [bugTitle, setBugTitle] = React.useState('');
+            const [bugDescription, setBugDescription] = React.useState('');
+            const [bugCategory, setBugCategory] = React.useState('Umum');
+            const [isSubmitting, setIsSubmitting] = React.useState(false);
+            const [submitMessage, setSubmitMessage] = React.useState('');
+            const [isError, setIsError] = React.useState(false);
+
+            const handleSubmitBug = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                setSubmitMessage('');
+                setIsError(false);
+
+                if (!userId) {
+                    setIsError(true);
+                    setSubmitMessage('Anda harus terotentikasi untuk melaporkan bug. Mohon tunggu proses otentikasi selesai.');
+                    setIsSubmitting(false);
+                    return;
+                }
+
+                try {
+                    // Menggunakan canvasAppId untuk jalur Firestore
+                    const bugReportsCollectionRef = db.collection(`artifacts/${canvasAppId}/public/data/bug_reports`);
+                    await bugReportsCollectionRef.add({
+                        userId: userId,
+                        title: bugTitle,
+                        description: bugDescription,
+                        category: bugCategory,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    setSubmitMessage('Laporan bug Anda berhasil dikirim! Terima kasih atas bantuan Anda.');
+                    setBugTitle('');
+                    setBugDescription('');
+                    setBugCategory('Umum');
+                } catch (error) {
+                    console.error("Error submitting bug report:", error);
+                    setSubmitMessage('Gagal mengirim laporan bug. Silakan coba lagi nanti.');
+                    setIsError(true);
+                } finally {
+                    setIsSubmitting(false);
+                }
+            };
+
+            return (
+                <section className="bg-gray-800 p-8 rounded-xl shadow-lg">
+                    <h1 className="text-4xl font-extrabold text-green-400 mb-6 text-center">Lapor Bug 🐛</h1>
+                    <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+                        Membantu kami meningkatkan server! Jika Anda menemukan bug atau masalah, silakan laporkan di sini.
+                    </p>
+
+                    {!userId && (
+                        <div className="bg-yellow-700 text-white p-4 rounded-lg mb-4 text-center">
+                            <p className="font-bold">Memuat ID Pengguna...</p>
+                            <p className="text-sm">Mohon tunggu hingga otentikasi selesai untuk mengirim laporan bug.</p>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmitBug} className="max-w-2xl mx-auto space-y-4">
+                        <div>
+                            <label htmlFor="bugTitle" className="block text-gray-300 text-lg font-semibold mb-2 text-left">
+                                Judul Bug:
+                            </label>
+                            <input
+                                type="text"
+                                id="bugTitle"
+                                className="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                placeholder="Singkat dan jelas tentang masalahnya"
+                                value={bugTitle}
+                                onChange={(e) => setBugTitle(e.target.value)}
+                                required
+                                disabled={!userId || isSubmitting}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="bugDescription" className="block text-gray-300 text-lg font-semibold mb-2 text-left">
+                                Deskripsi Detail:
+                            </label>
+                            <textarea
+                                id="bugDescription"
+                                className="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                rows="6"
+                                placeholder="Jelaskan masalah secara detail, langkah-langkah untuk mereproduksi, dan apa yang Anda harapkan terjadi."
+                                value={bugDescription}
+                                onChange={(e) => setBugDescription(e.target.value)}
+                                required
+                                disabled={!userId || isSubmitting}
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label htmlFor="bugCategory" className="block text-gray-300 text-lg font-semibold mb-2 text-left">
+                                Kategori:
+                            </label>
+                            <select
+                                id="bugCategory"
+                                className="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                value={bugCategory}
+                                onChange={(e) => setBugCategory(e.target.value)}
+                                disabled={!userId || isSubmitting}
+                            >
+                                <option value="Umum">Umum</option>
+                                <option value="Gameplay">Gameplay</option>
+                                <option value="Visual">Visual</option>
+                                <option value="Audio">Audio</option>
+                                <option value="Koneksi">Koneksi</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={!userId || isSubmitting || !bugTitle.trim() || !bugDescription.trim()}
+                            className={`w-full py-3 px-6 rounded-full text-xl font-bold shadow-lg transition-transform duration-200 transform hover:scale-105
+                                ${(!userId || isSubmitting || !bugTitle.trim() || !bugDescription.trim())
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-red-600 hover:bg-red-700 text-white'
+                                }`}
+                        >
+                            {isSubmitting ? 'Mengirim Laporan...' : 'Kirim Laporan Bug'}
+                        </button>
+
+                        {submitMessage && (
+                            <div className={`p-4 rounded-lg mt-4 text-center ${isError ? 'bg-red-700' : 'bg-green-600'} text-white`}>
+                                {submitMessage}
+                            </div>
+                        )}
+                    </form>
+                </section>
+            );
+        };
+
+        // Komponen Bagian Ide Event Baru (dengan integrasi Gemini API)
+        const EventIdeasSection = () => {
+            const [eventPrompt, setEventPrompt] = React.useState('');
+            const [generatedEventIdea, setGeneratedEventIdea] = React.useState('');
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [error, setError] = React.useState(null);
+
+            const generateEventIdea = async () => {
+                setIsLoading(true);
+                setGeneratedEventIdea('');
+                setError(null);
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `Hasilkan ide event Minecraft yang kreatif dan menarik berdasarkan tema atau kata kunci berikut: "${eventPrompt}". Ide tersebut harus mencakup nama event, deskripsi singkat, tujuan, dan beberapa aktivitas yang bisa dilakukan. Buatlah ringkas, sekitar 150-200 kata.`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // Canvas akan otomatis menyediakan kunci API
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Panggilan API gagal dengan status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        setGeneratedEventIdea(text);
+                    } else {
+                        setGeneratedEventIdea("Tidak ada ide event yang dihasilkan. Silakan coba lagi dengan kata kunci yang berbeda.");
+                    }
+                } catch (err) {
+                    console.error("Kesalahan saat menghasilkan ide event:", err);
+                    setError("Gagal menghasilkan ide event. Silakan coba lagi nanti. " + err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
+                    <h1 className="text-4xl font-extrabold text-green-400 mb-6">Ide Event Minecraft ⚡</h1>
+                    <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+                        Butuh inspirasi untuk event server selanjutnya? Dapatkan ide event unik dari AI kami!
+                        Cukup masukkan tema atau kata kunci.
+                    </p>
+
+                    <div className="flex flex-col items-center space-y-4">
+                        <textarea
+                            className="w-full md:w-3/4 p-4 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                            rows="4"
+                            placeholder="misalnya, 'turnamen PvP', 'berburu harta karun', 'festival musim panas'"
+                            value={eventPrompt}
+                            onChange={(e) => setEventPrompt(e.target.value)}
+                        ></textarea>
+
+                        <button
+                            onClick={generateEventIdea}
+                            disabled={isLoading || !eventPrompt.trim()}
+                            className={`px-6 py-3 rounded-full text-xl font-bold shadow-lg transition-transform duration-200 transform hover:scale-105
+                                ${isLoading || !eventPrompt.trim()
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                                }`}
+                        >
+                            {isLoading ? 'Menghasilkan Ide...' : 'Hasilkan Ide Event ⚡'}
+                        </button>
+
+                        {error && (
+                            <div className="bg-red-700 text-white p-4 rounded-lg mt-4 w-full md:w-3/4">
+                                <p className="font-bold">Error:</p>
+                                <p>{error}</p>
+                            </div>
+                        )}
+
+                        {generatedEventIdea && (
+                            <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 mt-6 w-full md:w-3/4 text-left animate-fade-in">
+                                <h2 className="text-2xl font-bold text-green-300 mb-3">Ide Event Anda:</h2>
+                                <p className="text-lg text-gray-200 whitespace-pre-wrap">{generatedEventIdea}</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            );
+        };
+
+        // Merender komponen App ke dalam DOM
+        const rootElement = document.getElementById('root');
+        ReactDOM.createRoot(rootElement).render(<App />);
+    </script>
+</body>
+</html>
