@@ -4,17 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARLCRAFT Minecraft Server</title>
-    <!-- Memuat Tailwind CSS dari CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat React dan ReactDOM dari CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Memuat Babel untuk transformasi JSX di browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Memuat font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Skrip inline untuk variabel global Firebase (lingkungan Canvas) -->
     <script>
         // Variabel-variabel ini disediakan oleh lingkungan Canvas dan dijadikan tersedia secara global
         window.__app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -23,7 +18,7 @@
             apiKey: "AIzaSyDt9JHvJpLKnU3zI1uqOq3scOLIeiQSnl4",
             authDomain: "minecraftweb-8fc71.firebaseapp.com",
             projectId: "minecraftweb-8fc71",
-            storageBucket: "minecraftweb-8fc71.firebasestorage.app",
+            storageBucket: "minecraftweb-8fc71.firebase.storage.app",
             messagingSenderId: "190426156767",
             appId: "1:190426156767:web:8ebe1a8ff6624e05a1e36a",
             measurementId: "G-Q1F83E894W"
@@ -31,12 +26,10 @@
         window.__initial_auth_token = typeof __initial_auth_token !== 'undefined' ? window.__initial_auth_token : null;
     </script>
 
-    <!-- Memuat SDK Firebase menggunakan versi compat untuk akses global -->
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
-    <!-- CSS Kustom dan Animasi (disisipkan di sini) -->
     <style>
         /* CSS Kustom */
         * {
@@ -56,6 +49,54 @@
         .break-words-custom {
             word-break: break-words;
             overflow-wrap: break-words;
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #1f2937; /* gray-800 */
+            padding: 2.5rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.25);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: modalFadeIn 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalFadeIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #d1d5db; /* gray-300 */
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close-button:hover {
+            color: #e5e7eb; /* gray-200 */
         }
     </style>
 </head>
@@ -349,11 +390,13 @@
             </section>
         );
 
-        // Komponen Bagian Toko Baru
+        // Komponen Bagian Toko
         const StoreSection = () => {
             const [storeItems, setStoreItems] = React.useState([]);
             const [loadingItems, setLoadingItems] = React.useState(true);
             const [errorItems, setErrorItems] = React.useState(null);
+            const [showDetailsModal, setShowDetailsModal] = React.useState(false);
+            const [selectedItemDetails, setSelectedItemDetails] = React.useState(null);
 
             React.useEffect(() => {
                 const fetchStoreItems = () => {
@@ -364,6 +407,8 @@
                             id: doc.id,
                             ...doc.data()
                         }));
+                        // Sort items by price
+                        items.sort((a, b) => a.price - b.price);
                         setStoreItems(items);
                         setLoadingItems(false);
                     }, (error) => {
@@ -377,11 +422,24 @@
                 fetchStoreItems();
             }, []);
 
+            // Fungsi untuk menampilkan modal detail item
+            const handleShowDetails = (item) => {
+                setSelectedItemDetails(item);
+                setShowDetailsModal(true);
+            };
+
+            // Fungsi untuk menutup modal detail item
+            const handleCloseDetails = () => {
+                setShowDetailsModal(false);
+                setSelectedItemDetails(null);
+            };
+
+            // Fungsi untuk mengarahkan ke WhatsApp
             const handleBuy = (item) => {
-                // Implementasi placeholder untuk pembelian
-                // Dalam aplikasi nyata, ini akan melibatkan logika pembayaran atau menambahkan item ke inventaris pemain.
-                alert(`Anda mencoba membeli ${item.name} seharga ${item.price} ${item.currency}. Ini adalah placeholder.`);
-                console.log(`Pembelian item: ${item.name}`);
+                const phoneNumber = "6289613049900"; // Nomor WA yang dituju
+                const message = encodeURIComponent(`Halo, saya tertarik untuk membeli ${item.name} di ARLCRAFT. Mohon informasinya.`);
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                window.open(whatsappUrl, '_blank');
             };
 
             if (loadingItems) {
@@ -402,6 +460,7 @@
             }
 
             // Item toko dummy dengan 5 item, diurutkan berdasarkan harga dari terendah ke tertinggi
+            // Ditambah properti 'features' untuk detail
             const defaultStoreItems = [
                 {
                     id: 'mystery-crate',
@@ -409,7 +468,14 @@
                     description: 'Dapatkan item acak langka dan kosmetik unik, seperti sayap baru atau efek partikel spesial.',
                     price: 50000,
                     currency: 'IDR',
-                    imageUrl: 'https://placehold.co/150x150/8B4513/FFFFFF?text=CRATE'
+                    imageUrl: 'https://placehold.co/150x150/8B4513/FFFFFF?text=CRATE',
+                    features: [
+                        'Kesempatan mendapatkan item langka',
+                        'Kosmetik eksklusif (efek partikel, aura)',
+                        'Berisi koin in-game tambahan',
+                        'Variasi hadiah acak',
+                        'Rasa kejutan dan kesenangan'
+                    ]
                 },
                 {
                     id: 'custom-prefix',
@@ -417,7 +483,14 @@
                     description: 'Dapatkan prefix nama Anda sendiri di obrolan server. Tampil beda dengan nama unik Anda!',
                     price: 75000,
                     currency: 'IDR',
-                    imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=PREFIX'
+                    imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=PREFIX',
+                    features: [
+                        'Nama unik di chat server',
+                        'Pilihan warna untuk prefix',
+                        'Dapat diubah setiap bulan',
+                        'Meningkatkan visibilitas',
+                        'Menunjukkan identitas khusus'
+                    ]
                 },
                 {
                     id: 'vip-rank',
@@ -425,7 +498,14 @@
                     description: 'Akses fitur eksklusif dan lencana VIP di server, termasuk akses ke area VIP dan keuntungan eksklusif lainnya.',
                     price: 100000,
                     currency: 'IDR',
-                    imageUrl: 'https://placehold.co/150x150/00FF00/FFFFFF?text=VIP'
+                    imageUrl: 'https://placehold.co/150x150/00FF00/FFFFFF?text=VIP',
+                    features: [
+                        'Akses ke area VIP khusus',
+                        'Fly mode di survival (terbatas)',
+                        'Kit peralatan VIP harian',
+                        'Prioritas login saat server penuh',
+                        'Lencana VIP eksklusif di samping nama'
+                    ]
                 },
                 {
                     id: 'pet-companion',
@@ -433,7 +513,14 @@
                     description: 'Dapatkan hewan peliharaan unik yang akan mengikuti Anda dalam petualangan, membantu mengumpulkan item atau memberikan buff.',
                     price: 110000,
                     currency: 'IDR',
-                    imageUrl: 'https://placehold.co/150x150/FFC0CB/000000?text=PET'
+                    imageUrl: 'https://placehold.co/150x150/FFC0CB/000000?text=PET',
+                    features: [
+                        'Hewan peliharaan unik non-combat',
+                        'Mengikuti kemanapun Anda pergi',
+                        'Dapat membantu mengambil item',
+                        'Memberikan buff kecil (misal: kecepatan lari)',
+                        'Dapat di-customize tampilannya'
+                    ]
                 },
                 {
                     id: 'elytra-upgrade',
@@ -441,11 +528,19 @@
                     description: 'Upgrade Elytra Anda untuk daya tahan dan kecepatan lebih baik, memungkinkan Anda menjelajahi dunia lebih jauh.',
                     price: 150000,
                     currency: 'IDR',
-                    imageUrl: 'https://placehold.co/150x150/8B008B/FFFFFF?text=ELYTRA'
+                    imageUrl: 'https://placehold.co/150x150/8B008B/FFFFFF?text=ELYTRA',
+                    features: [
+                        'Daya tahan Elytra lebih tinggi',
+                        'Kecepatan terbang lebih cepat',
+                        'Efisiensi bahan bakar (roket) lebih baik',
+                        'Tampilan efek terbang yang unik',
+                        'Pengalaman eksplorasi yang superior'
+                    ]
                 },
             ];
 
-            const itemsToDisplay = storeItems.length > 0 ? storeItems : defaultStoreItems;
+            // Menggunakan item dari Firestore jika tersedia, jika tidak, gunakan item default yang sudah diurutkan
+            const itemsToDisplay = storeItems.length > 0 ? storeItems.sort((a,b) => a.price - b.price) : defaultStoreItems;
 
 
             return (
@@ -458,14 +553,20 @@
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {itemsToDisplay.map(item => (
                             <div key={item.id} className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 flex flex-col items-center transform hover:scale-105 transition-transform duration-200">
-                                <img
-                                    src={item.imageUrl || `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`}
-                                    alt={item.name}
-                                    className="w-32 h-32 object-contain rounded-full mb-4 border-2 border-green-500"
-                                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`; }}
-                                />
-                                <h2 className="text-2xl font-bold text-green-300 mb-2">{item.name}</h2>
-                                {/* Menambahkan kelas untuk pemecah kata otomatis */}
+                                {/* Area yang bisa diklik untuk detail */}
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={() => handleShowDetails(item)}
+                                >
+                                    <img
+                                        src={item.imageUrl || `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`}
+                                        alt={item.name}
+                                        className="w-32 h-32 object-contain rounded-full mb-4 border-2 border-green-500"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`; }}
+                                    />
+                                    <h2 className="text-2xl font-bold text-green-300 mb-2">{item.name}</h2>
+                                </div>
+                                {/* Deskripsi tetap terlihat */}
                                 <p className="text-gray-300 text-center mb-4 flex-grow break-words-custom">{item.description}</p>
                                 <p className="text-3xl font-extrabold text-yellow-400 mb-4">{item.price.toLocaleString('id-ID')} {item.currency}</p>
                                 <button
@@ -477,6 +578,40 @@
                             </div>
                         ))}
                     </div>
+
+                    {/* Modal untuk menampilkan fitur item */}
+                    {showDetailsModal && selectedItemDetails && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <button
+                                    className="modal-close-button"
+                                    onClick={handleCloseDetails}
+                                    aria-label="Close"
+                                >
+                                    &times;
+                                </button>
+                                <h2 className="text-3xl font-bold text-green-400 mb-4">{selectedItemDetails.name} - Fitur</h2>
+                                {selectedItemDetails.features && selectedItemDetails.features.length > 0 ? (
+                                    <ul className="list-disc list-inside text-gray-200 text-left space-y-2">
+                                        {selectedItemDetails.features.map((feature, index) => (
+                                            <li key={index}>{feature}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-400">Tidak ada fitur spesifik yang terdaftar untuk item ini.</p>
+                                )}
+                                <button
+                                    onClick={() => {
+                                        handleBuy(selectedItemDetails);
+                                        handleCloseDetails(); // Tutup modal setelah mengarahkan ke WA
+                                    }}
+                                    className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full text-lg shadow-lg transition-transform duration-200"
+                                >
+                                    Beli Sekarang (via WhatsApp)
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </section>
             );
         };
