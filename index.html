@@ -28,7 +28,7 @@
             appId: "1:190426156767:web:8ebe1a8ff6624e05a1e36a",
             measurementId: "G-Q1F83E894W"
         });
-        window.__initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        window.__initial_auth_token = typeof __initial_auth_token !== 'undefined' ? window.__initial_auth_token : null;
     </script>
 
     <!-- Memuat SDK Firebase menggunakan versi compat untuk akses global -->
@@ -50,6 +50,12 @@
         }
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Memastikan teks memecah baris dalam kotak */
+        .break-words-custom {
+            word-break: break-words;
+            overflow-wrap: break-words;
         }
     </style>
 </head>
@@ -131,14 +137,10 @@
                         return <RulesSection />;
                     case 'bergabung':
                         return <JoinSection />;
-                    case 'ide-bangunan':
-                        return <BuildIdeasSection />;
                     case 'toko':
                         return <StoreSection />;
                     case 'lapor-bug':
                         return <ReportBugSection userId={userId} />;
-                    case 'ide-event':
-                        return <EventIdeasSection />;
                     default:
                         return <HomeSection userId={userId} serverStatus={serverStatus} />;
                 }
@@ -179,10 +181,8 @@
                                     <NavItem label="Tentang Kami" onClick={() => { setCurrentPage('tentang'); setIsNavOpen(false); }} active={currentPage === 'tentang'} />
                                     <NavItem label="Aturan" onClick={() => { setCurrentPage('aturan'); setIsNavOpen(false); }} active={currentPage === 'aturan'} />
                                     <NavItem label="Bergabung" onClick={() => { setCurrentPage('bergabung'); setIsNavOpen(false); }} active={currentPage === 'bergabung'} />
-                                    <NavItem label="Ide Bangunan ✨" onClick={() => { setCurrentPage('ide-bangunan'); setIsNavOpen(false); }} active={currentPage === 'ide-bangunan'} />
                                     <NavItem label="Toko 💎" onClick={() => { setCurrentPage('toko'); setIsNavOpen(false); }} active={currentPage === 'toko'} />
                                     <NavItem label="Lapor Bug 🐛" onClick={() => { setCurrentPage('lapor-bug'); setIsNavOpen(false); }} active={currentPage === 'lapor-bug'} />
-                                    <NavItem label="Ide Event ⚡" onClick={() => { setCurrentPage('ide-event'); setIsNavOpen(false); }} active={currentPage === 'ide-event'} />
                                 </div>
                             </div>
                         </div>
@@ -324,10 +324,10 @@
                         <p className="mb-2">
                             Buka Minecraft, klik "Multiplayer", lalu "Tambahkan Server".
                         </p>
-                        <p className="text-xl font-mono bg-gray-900 p-3 rounded-md inline-block select-all">
+                        <p className="text-xl font-mono bg-gray-900 p-3 rounded-md inline-block select-all break-all">
                             play.pixelrealm.com
                         </p>
-                        <p className="mt-2 text-sm text-gray-400">
+                        <p className="mt-2 text-sm text-gray-400 break-words-custom">
                             (Ini adalah contoh alamat server. Ganti dengan IP/domain server Anda yang sebenarnya.)
                         </p>
                     </div>
@@ -347,102 +347,6 @@
                 </div>
             </section>
         );
-
-
-        // Komponen Bagian Ide Bangunan (dengan integrasi Gemini API)
-        const BuildIdeasSection = () => {
-            const [buildPrompt, setBuildPrompt] = React.useState('');
-            const [generatedIdea, setGeneratedIdea] = React.useState('');
-            const [isLoading, setIsLoading] = React.useState(false);
-            const [error, setError] = React.useState(null);
-
-            const generateIdea = async () => {
-                setIsLoading(true);
-                setGeneratedIdea('');
-                setError(null);
-
-                try {
-                    let chatHistory = [];
-                    const prompt = `Hasilkan ide bangunan Minecraft yang kreatif dan terperinci berdasarkan kata kunci/deskripsi berikut: "${buildPrompt}". Ide tersebut harus mencakup tema, beberapa fitur utama, dan kemungkinan palet blok. Buatlah ringkas, sekitar 100-150 kata.`;
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    const payload = { contents: chatHistory };
-                    const apiKey = ""; // Canvas akan otomatis menyediakan kunci API
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Panggilan API gagal dengan status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        setGeneratedIdea(text);
-                    } else {
-                        setGeneratedIdea("Tidak ada ide yang dihasilkan. Silakan coba lagi dengan kata kunci yang berbeda.");
-                    }
-                } catch (err) {
-                    console.error("Kesalahan saat menghasilkan ide bangunan:", err);
-                    setError("Gagal menghasilkan ide. Silakan coba lagi nanti. " + err.message);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            return (
-                <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
-                    <h1 className="text-4xl font-extrabold text-green-400 mb-6">Ide Bangunan Minecraft ✨</h1>
-                    <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-                        Kehabisan inspirasi? Biarkan generator bertenaga AI kami memberi Anda ide bangunan Minecraft yang unik!
-                        Cukup jelaskan apa yang Anda cari.
-                    </p>
-
-                    <div className="flex flex-col items-center space-y-4">
-                        <textarea
-                            className="w-full md:w-3/4 p-4 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                            rows="4"
-                            placeholder="misalnya, 'kota futuristik di langit', 'basis bawah tanah yang nyaman', 'kuil gurun'"
-                            value={buildPrompt}
-                            onChange={(e) => setBuildPrompt(e.target.value)}
-                        ></textarea>
-
-                        <button
-                            onClick={generateIdea}
-                            disabled={isLoading || !buildPrompt.trim()}
-                            className={`px-6 py-3 rounded-full text-xl font-bold shadow-lg transition-transform duration-200 transform hover:scale-105
-                                ${isLoading || !buildPrompt.trim()
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                : 'bg-green-600 hover:bg-green-700 text-white'
-                                }`}
-                        >
-                            {isLoading ? 'Menghasilkan Ide...' : 'Hasilkan Ide ✨'}
-                        </button>
-
-                        {error && (
-                            <div className="bg-red-700 text-white p-4 rounded-lg mt-4 w-full md:w-3/4">
-                                <p className="font-bold">Error:</p>
-                                <p>{error}</p>
-                            </div>
-                        )}
-
-                        {generatedIdea && (
-                            <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 mt-6 w-full md:w-3/4 text-left animate-fade-in">
-                                <h2 className="text-2xl font-bold text-green-300 mb-3">Ide Bangunan Anda:</h2>
-                                <p className="text-lg text-gray-200 whitespace-pre-wrap">{generatedIdea}</p>
-                            </div>
-                        )}
-                    </div>
-                </section>
-            );
-        };
 
         // Komponen Bagian Toko Baru
         const StoreSection = () => {
@@ -522,6 +426,22 @@
                     currency: 'IDR',
                     imageUrl: 'https://placehold.co/150x150/FFD700/000000?text=PREFIX'
                 },
+                {
+                    id: 'elytra-upgrade',
+                    name: 'Upgrade Elytra',
+                    description: 'Upgrade Elytra Anda untuk daya tahan dan kecepatan lebih baik.',
+                    price: 150000,
+                    currency: 'IDR',
+                    imageUrl: 'https://placehold.co/150x150/8B008B/FFFFFF?text=ELYTRA'
+                },
+                {
+                    id: 'pet-companion',
+                    name: 'Pendamping Hewan Peliharaan',
+                    description: 'Dapatkan hewan peliharaan unik yang akan mengikuti Anda dalam petualangan.',
+                    price: 110000,
+                    currency: 'IDR',
+                    imageUrl: 'https://placehold.co/150x150/FFC0CB/000000?text=PET'
+                },
             ];
 
             const itemsToDisplay = storeItems.length > 0 ? storeItems : defaultStoreItems;
@@ -544,7 +464,8 @@
                                     onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/150x150/6B7280/FFFFFF?text=${item.name.replace(/\s/g, '+')}`; }}
                                 />
                                 <h2 className="text-2xl font-bold text-green-300 mb-2">{item.name}</h2>
-                                <p className="text-gray-300 text-center mb-4 flex-grow">{item.description}</p>
+                                {/* Menambahkan kelas untuk pemecah kata otomatis */}
+                                <p className="text-gray-300 text-center mb-4 flex-grow break-words-custom">{item.description}</p>
                                 <p className="text-3xl font-extrabold text-yellow-400 mb-4">{item.price.toLocaleString('id-ID')} {item.currency}</p>
                                 <button
                                     onClick={() => handleBuy(item)}
@@ -689,101 +610,6 @@
                             </div>
                         )}
                     </form>
-                </section>
-            );
-        };
-
-        // Komponen Bagian Ide Event Baru (dengan integrasi Gemini API)
-        const EventIdeasSection = () => {
-            const [eventPrompt, setEventPrompt] = React.useState('');
-            const [generatedEventIdea, setGeneratedEventIdea] = React.useState('');
-            const [isLoading, setIsLoading] = React.useState(false);
-            const [error, setError] = React.useState(null);
-
-            const generateEventIdea = async () => {
-                setIsLoading(true);
-                setGeneratedEventIdea('');
-                setError(null);
-
-                try {
-                    let chatHistory = [];
-                    const prompt = `Hasilkan ide event Minecraft yang kreatif dan menarik berdasarkan tema atau kata kunci berikut: "${eventPrompt}". Ide tersebut harus mencakup nama event, deskripsi singkat, tujuan, dan beberapa aktivitas yang bisa dilakukan. Buatlah ringkas, sekitar 150-200 kata.`;
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    const payload = { contents: chatHistory };
-                    const apiKey = ""; // Canvas akan otomatis menyediakan kunci API
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Panggilan API gagal dengan status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        setGeneratedEventIdea(text);
-                    } else {
-                        setGeneratedEventIdea("Tidak ada ide event yang dihasilkan. Silakan coba lagi dengan kata kunci yang berbeda.");
-                    }
-                } catch (err) {
-                    console.error("Kesalahan saat menghasilkan ide event:", err);
-                    setError("Gagal menghasilkan ide event. Silakan coba lagi nanti. " + err.message);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            return (
-                <section className="bg-gray-800 p-8 rounded-xl shadow-lg text-center">
-                    <h1 className="text-4xl font-extrabold text-green-400 mb-6">Ide Event Minecraft ⚡</h1>
-                    <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-                        Butuh inspirasi untuk event server selanjutnya? Dapatkan ide event unik dari AI kami!
-                        Cukup masukkan tema atau kata kunci.
-                    </p>
-
-                    <div className="flex flex-col items-center space-y-4">
-                        <textarea
-                            className="w-full md:w-3/4 p-4 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                            rows="4"
-                            placeholder="misalnya, 'turnamen PvP', 'berburu harta karun', 'festival musim panas'"
-                            value={eventPrompt}
-                            onChange={(e) => setEventPrompt(e.target.value)}
-                        ></textarea>
-
-                        <button
-                            onClick={generateEventIdea}
-                            disabled={isLoading || !eventPrompt.trim()}
-                            className={`px-6 py-3 rounded-full text-xl font-bold shadow-lg transition-transform duration-200 transform hover:scale-105
-                                ${isLoading || !eventPrompt.trim()
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                                }`}
-                        >
-                            {isLoading ? 'Menghasilkan Ide...' : 'Hasilkan Ide Event ⚡'}
-                        </button>
-
-                        {error && (
-                            <div className="bg-red-700 text-white p-4 rounded-lg mt-4 w-full md:w-3/4">
-                                <p className="font-bold">Error:</p>
-                                <p>{error}</p>
-                            </div>
-                        )}
-
-                        {generatedEventIdea && (
-                            <div className="bg-gray-700 p-6 rounded-lg shadow-md border border-gray-600 mt-6 w-full md:w-3/4 text-left animate-fade-in">
-                                <h2 className="text-2xl font-bold text-green-300 mb-3">Ide Event Anda:</h2>
-                                <p className="text-lg text-gray-200 whitespace-pre-wrap">{generatedEventIdea}</p>
-                            </div>
-                        )}
-                    </div>
                 </section>
             );
         };
