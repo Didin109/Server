@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="o0QlBrzfCIVBWLEW3KwFRUTUbtKo_RAjG_EXatilgc0" />
+  
+    <title>PetRXStore - Premium Pet Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #00cec9;
+            --dark: #2d3436;
+            --light-bg: #f8faff;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+
+        .card-premium {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(108, 92, 231, 0.15);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .nav-active { color: var(--primary) !important; }
+        .nav-active i { transform: scale(1.2); color: var(--primary); }
+
+        /* Animation for view transitions */
+        .view-transition {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="pb-24 overflow-x-hidden">
+
+    <!-- Top Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-[60] glass-effect h-20 flex items-center justify-between px-6">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
+            <div class="w-10 h-10 bg-[#6c5ce7] rounded-2xl flex items-center justify-center text-white shadow-lg rotate-3">
+                <i class="fas fa-dragon text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-xl leading-none tracking-tight">PetRX<span class="text-[#6c5ce7]">Store</span></h1>
+                <p class="text-[9px] font-bold text-gray-400 tracking-[0.2em] uppercase">Premium Marketplace</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button onclick="toggleCart()" class="relative group p-2">
+                <div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center border-2 border-white scale-0 transition-transform duration-300" id="cart-badge">0</div>
+                <i class="fas fa-shopping-bag text-gray-500 text-xl group-hover:text-[#6c5ce7] transition-colors"></i>
+            </button>
+            <div id="user-avatar" onclick="showView('profile')" class="hidden w-10 h-10 border-2 border-[#6c5ce7]/20 rounded-2xl overflow-hidden cursor-pointer hover:border-[#6c5ce7] transition-all">
+                <img id="avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky" alt="avatar">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Sections -->
+    <main id="app-container" class="pt-24 px-4 max-w-6xl mx-auto">
+        
+        <!-- SECTION: LANDING PAGE -->
+        <section id="view-home" class="view-transition space-y-12 pb-10">
+            <!-- Hero Section -->
+            <div class="hero-gradient rounded-[32px] p-8 md:p-12 text-white relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-4 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-extrabold tracking-widest uppercase mb-4">Edisi Terbatas 2026</span>
+                    <h2 class="text-4xl md:text-6xl font-black mb-6 leading-[1.1]">Dapatkan Pet Impian Anda Hari Ini.</h2>
+                    <p class="text-white/80 text-sm md:text-base mb-8 leading-relaxed">Platform nomor satu untuk jual beli pet virtual dengan jaminan keamanan 100%, sistem stok real-time, dan dukungan admin 24/7.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showView('buy')" class="bg-white text-[#6c5ce7] px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-transform shadow-xl">Mulai Belanja</button>
+                        <button onclick="document.getElementById('stats-section').scrollIntoView({behavior:'smooth'})" class="bg-white/10 backdrop-blur-md border border-white/20 px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all">Pelajari Lebih Lanjut</button>
+                    </div>
+                </div>
+                <!-- Decorative Elements -->
+                <i class="fas fa-paw absolute -bottom-10 -right-10 text-[200px] text-white/5 rotate-12"></i>
+                <i class="fas fa-shield-alt absolute top-10 right-20 text-[100px] text-white/5 -rotate-12"></i>
+            </div>
+
+            <!-- Stats Section -->
+            <div id="stats-section" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="card-premium p-6 rounded-3xl text-center">
+                    <h4 class="text-2xl font-black text-[#6c5ce7]">15k+</h4>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Transaksi Sukses</p>
+                </div>
+                <div class="card-premium p-6 rounded-3xl text-center">
+                    <h4 class="text-2xl font-black text-[#6c5ce7]">24/7</h4>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Admin Support</p>
+                </div>
+                <div class="card-premium p-6 rounded-3xl text-center">
+                    <h4 class="text-2xl font-black text-[#6c5ce7]">100%</h4>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Keamanan Akun</p>
+                </div>
+                <div class="card-premium p-6 rounded-3xl text-center">
+                    <h4 class="text-2xl font-black text-[#6c5ce7]">5.0</h4>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rating Kepuasan</p>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="space-y-6">
+                <div class="flex flex-col items-center text-center space-y-2">
+                    <h3 class="text-2xl font-extrabold text-gray-800">Kenapa Memilih PetRX?</h3>
+                    <div class="w-20 h-1.5 bg-[#6c5ce7] rounded-full"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-8 rounded-[32px] bg-white border border-gray-100 space-y-4">
+                        <div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fas fa-bolt"></i></div>
+                        <h5 class="font-bold text-lg">Proses Instant</h5>
+                        <p class="text-sm text-gray-500 leading-relaxed">Setelah pembayaran dikonfirmasi, pet langsung dikirimkan melalui sistem trade kami yang aman.</p>
+                    </div>
+                    <div class="p-8 rounded-[32px] bg-white border border-gray-100 space-y-4">
+                        <div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fas fa-check-double"></i></div>
+                        <h5 class="font-bold text-lg">Terverifikasi</h5>
+                        <p class="text-sm text-gray-500 leading-relaxed">Semua penjual dan admin di platform kami telah melalui tahap verifikasi identitas yang ketat.</p>
+                    </div>
+                    <div class="p-8 rounded-[32px] bg-white border border-gray-100 space-y-4">
+                        <div class="w-14 h-14 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i class="fas fa-tags"></i></div>
+                        <h5 class="font-bold text-lg">Harga Terbaik</h5>
+                        <p class="text-sm text-gray-500 leading-relaxed">Kami menjamin harga yang kompetitif dibanding marketplace luar negeri lainnya.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="bg-gray-900 rounded-[40px] p-8 md:p-12 text-white">
+                <h3 class="text-2xl font-bold mb-8">Pertanyaan Umum (FAQ)</h3>
+                <div class="space-y-4">
+                    <details class="group bg-white/5 rounded-2xl p-4 border border-white/10">
+                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center">
+                            Bagaimana cara kerja sistem trade?
+                            <i class="fas fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <p class="text-sm text-gray-400 mt-4 leading-relaxed">Admin akan menghubungi Anda via chat setelah order dibuat. Trade dilakukan di dalam game pada server yang disepakati.</p>
+                    </details>
+                    <details class="group bg-white/5 rounded-2xl p-4 border border-white/10">
+                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center">
+                            Apakah aman dari ban?
+                            <i class="fas fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <p class="text-sm text-gray-400 mt-4 leading-relaxed">Kami menggunakan metode "Clean Trade" yang meminimalisir risiko pendeteksian oleh sistem game.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: MARKETPLACE (BUY) -->
+        <section id="view-buy" class="view-transition hidden space-y-8 pb-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-gray-800">Katalog Pet</h2>
+                    <p class="text-sm text-gray-500 font-medium">Temukan koleksi langka untuk akun Anda.</p>
+                </div>
+                <div id="buy-locked-msg" class="hidden bg-red-50 text-red-500 px-6 py-3 rounded-2xl border border-red-100 flex items-center gap-3 text-xs font-bold animate-pulse">
+                    <i class="fas fa-lock"></i> Verifikasi email di Profil untuk belanja
+                </div>
+            </div>
+            
+            <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Products will be injected here -->
+            </div>
+        </section>
+
+        <!-- SECTION: CHAT -->
+        <section id="view-chat" class="view-transition hidden h-[calc(100vh-180px)] flex flex-col bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b flex justify-between items-center bg-white/50 backdrop-blur-md sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#6c5ce7]/10 rounded-2xl flex items-center justify-center text-[#6c5ce7] relative">
+                        <i class="fas fa-headset text-xl"></i>
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Bantuan Admin</h4>
+                        <p class="text-[10px] text-green-500 font-bold uppercase tracking-widest">Online Sekarang</p>
+                    </div>
+                </div>
+                <div id="admin-user-selector" class="hidden">
+                    <select id="chat-user-list" onchange="window.switchChatUser(this.value)" class="text-[10px] bg-gray-50 border-none rounded-xl p-2 font-bold outline-none"></select>
+                </div>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/50 custom-scrollbar">
+                <!-- Messages -->
+            </div>
+            <div class="p-4 md:p-6 bg-white border-t">
+                <div class="flex gap-3 bg-gray-100 p-2 rounded-[24px]">
+                    <input type="text" id="chat-input" placeholder="Tanyakan stok atau bantuan..." class="flex-1 bg-transparent px-4 py-2 text-sm outline-none font-medium">
+                    <button onclick="window.sendMessage()" class="bg-[#6c5ce7] text-white w-12 h-12 rounded-2xl flex items-center justify-center hover:scale-105 transition-transform shadow-lg">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PROFILE / AUTH -->
+        <section id="view-profile" class="view-transition hidden max-w-lg mx-auto pb-10">
+            <!-- Auth Card -->
+            <div id="auth-box" class="card-premium rounded-[40px] p-10 space-y-8">
+                <div id="login-ui">
+                    <div class="text-center space-y-2 mb-8">
+                        <h2 class="text-3xl font-black">Selamat Datang</h2>
+                        <p class="text-sm text-gray-500 font-medium">Masuk untuk mengelola transaksi Anda.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-gray-400 ml-2 uppercase">Email Address</label>
+                            <input type="email" id="email-in" class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 ring-[#6c5ce7]/20 transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-gray-400 ml-2 uppercase">Password</label>
+                            <input type="password" id="pass-in" class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 ring-[#6c5ce7]/20 transition-all">
+                        </div>
+                        <button onclick="window.appLogin()" class="w-full bg-[#6c5ce7] text-white py-5 rounded-[24px] font-black shadow-xl shadow-[#6c5ce7]/20 hover:scale-[1.02] transition-transform">Log In Akun</button>
+                        
+                        <div class="flex justify-between items-center pt-2">
+                            <button onclick="window.forgotPassword()" class="text-xs font-bold text-[#6c5ce7] hover:underline">Lupa Password?</button>
+                            <button onclick="window.toggleAuth(true)" class="text-xs font-bold text-gray-400">Daftar Akun Baru</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="register-ui" class="hidden">
+                    <div class="text-center space-y-2 mb-8">
+                        <h2 class="text-3xl font-black">Buat Akun</h2>
+                        <p class="text-sm text-gray-500 font-medium">Bergabunglah dengan komunitas PetRX.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <input type="email" id="email-up" placeholder="Email Aktif" class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 ring-[#6c5ce7]/20">
+                        <input type="password" id="pass-up" placeholder="Password (Min. 6 Karakter)" class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 ring-[#6c5ce7]/20">
+                        <button onclick="window.appRegister()" class="w-full bg-black text-white py-5 rounded-[24px] font-black shadow-xl hover:scale-[1.02] transition-transform">Daftar Sekarang</button>
+                        <button onclick="window.toggleAuth(false)" class="w-full text-xs font-bold text-gray-400 text-center">Sudah punya akun? Masuk</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Panel -->
+            <div id="user-panel" class="hidden space-y-6">
+                <div class="card-premium rounded-[40px] p-8 text-center space-y-4">
+                    <div class="w-24 h-24 mx-auto rounded-[32px] overflow-hidden border-4 border-[#6c5ce7]/10 p-1">
+                        <img id="panel-avatar" src="" alt="avatar" class="w-full h-full object-cover rounded-[26px]">
+                    </div>
+                    <div>
+                        <h3 id="display-email" class="text-xl font-black">---</h3>
+                        <div id="verify-status-tag" class="inline-block mt-2"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 pt-4">
+                        <div class="bg-gray-50 p-4 rounded-3xl">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase">Poin Reward</p>
+                            <p class="font-black text-[#6c5ce7]">1.250</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-3xl">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase">Total Order</p>
+                            <p class="font-black text-[#6c5ce7]">12</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-actions" class="hidden card-premium rounded-[40px] p-8 space-y-4 bg-[#6c5ce7]/5 border-[#6c5ce7]/20">
+                    <h4 class="font-black text-sm uppercase tracking-widest text-[#6c5ce7]"><i class="fas fa-tools mr-2"></i> Admin Control</h4>
+                    <button onclick="window.openAdminModal()" class="w-full bg-[#6c5ce7] text-white py-4 rounded-2xl font-bold text-sm shadow-lg">TAMBAH PRODUK BARU</button>
+                </div>
+
+                <button onclick="window.appLogout()" class="w-full py-5 rounded-[24px] font-black text-red-500 border-2 border-red-50 hover:bg-red-50 transition-all">Keluar Dari Akun</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 z-[100] w-full max-w-sm bg-white shadow-2xl translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        <div class="p-8 border-b flex justify-between items-center">
+            <h3 class="text-2xl font-black">Keranjang</h3>
+            <button onclick="toggleCart()" class="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center hover:rotate-90 transition-all"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+            <!-- Cart items -->
+        </div>
+        <div class="p-8 border-t space-y-6">
+            <div class="flex justify-between items-center font-black">
+                <span class="text-gray-400">ESTIMASI TOTAL</span>
+                <span id="cart-total" class="text-2xl text-[#6c5ce7]">Rp 0</span>
+            </div>
+            <button onclick="window.checkout()" class="w-full bg-[#6c5ce7] text-white py-6 rounded-[28px] font-black shadow-xl shadow-[#6c5ce7]/30 active:scale-95 transition-all">LANJUT PEMBAYARAN</button>
+            <p class="text-[10px] text-gray-400 text-center font-bold uppercase tracking-wider">Aman • Cepat • Terpercaya</p>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="fixed bottom-0 left-0 right-0 h-24 glass-effect border-t flex items-center justify-around px-4 z-[55]">
+        <button onclick="showView('home')" class="nav-btn flex flex-col items-center gap-1 group" data-v="home">
+            <i class="fas fa-compass text-xl text-gray-400 group-hover:text-[#6c5ce7] transition-all"></i>
+            <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Discover</span>
+        </button>
+        <button onclick="showView('buy')" class="nav-btn flex flex-col items-center gap-1 group" data-v="buy">
+            <i class="fas fa-store text-xl text-gray-400 group-hover:text-[#6c5ce7] transition-all"></i>
+            <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Market</span>
+        </button>
+        <button onclick="showView('chat')" class="nav-btn flex flex-col items-center gap-1 group" data-v="chat">
+            <i class="fas fa-comments text-xl text-gray-400 group-hover:text-[#6c5ce7] transition-all"></i>
+            <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Support</span>
+        </button>
+        <button onclick="showView('profile')" class="nav-btn flex flex-col items-center gap-1 group" data-v="profile">
+            <i class="fas fa-user-circle text-xl text-gray-400 group-hover:text-[#6c5ce7] transition-all"></i>
+            <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Account</span>
+        </button>
+    </div>
+
+    <!-- Admin Modal (Add/Edit) -->
+    <div id="modal-admin" class="fixed inset-0 z-[110] bg-black/80 hidden flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-xl rounded-[40px] p-8 md:p-12 shadow-2xl space-y-6">
+            <h3 id="modal-title" class="text-3xl font-black">Informasi Produk</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-gray-400 ml-2">NAMA PET</label>
+                    <input type="text" id="p-name" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none focus:ring-2 ring-[#6c5ce7]/10">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-gray-400 ml-2">HARGA (RP)</label>
+                    <input type="number" id="p-price" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none focus:ring-2 ring-[#6c5ce7]/10">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-gray-400 ml-2">STOK SAAT INI</label>
+                    <input type="number" id="p-stock" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none focus:ring-2 ring-[#6c5ce7]/10">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-gray-400 ml-2">KATEGORI</label>
+                    <select id="p-cat" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none">
+                        <option>Legendary</option>
+                        <option>Ultra-Rare</option>
+                        <option>Rare</option>
+                        <option>Common</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-bold text-gray-400 ml-2">URL GAMBAR (HTTPS)</label>
+                <input type="text" id="p-logo" placeholder="Bisa link Drive/Discord/Imgur dll" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none focus:ring-2 ring-[#6c5ce7]/10">
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-bold text-gray-400 ml-2">DESKRIPSI LENGKAP</label>
+                <textarea id="p-desc" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold outline-none h-32"></textarea>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button onclick="window.closeAdminModal()" class="flex-1 py-5 bg-gray-100 rounded-[24px] font-bold">Batal</button>
+                <button id="btn-save" onclick="window.saveProduct()" class="flex-1 py-5 bg-[#6c5ce7] text-white rounded-[24px] font-black shadow-xl shadow-[#6c5ce7]/20">Simpan Produk</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+        // CONFIG (Gunakan yang sama dari user sebelumnya)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXlW-u5Bt3dylnZ3CTjn1YtV2Uba4mR0k",
+            authDomain: "petrx-marketplace.firebaseapp.com",
+            projectId: "petrx-marketplace",
+            storageBucket: "petrx-marketplace.firebasestorage.app",
+            messagingSenderId: "74274703524",
+            appId: "1:74274703524:web:45b5d01ee97c6255613e31",
+            databaseURL: "https://petrx-marketplace-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+        const ADMIN_EMAIL = "adminpet@gmail.com";
+        const APP_PATH = "petrx-marketplace-v1";
+
+        let user = null;
+        let products = [];
+        let editId = null;
+        let cart = JSON.parse(localStorage.getItem('petrx_cart_v4') || '[]');
+
+        // --- AUTH LOGIC ---
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user) {
+                const seed = user.email.split('@')[0];
+                const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
+                document.getElementById('avatar-img').src = avatar;
+                document.getElementById('panel-avatar').src = avatar;
+                document.getElementById('user-avatar').classList.remove('hidden');
+                document.getElementById('display-email').textContent = user.email;
+                document.getElementById('user-panel').classList.remove('hidden');
+                document.getElementById('auth-box').classList.add('hidden');
+                
+                const isV = user.emailVerified || user.email === ADMIN_EMAIL;
+                document.getElementById('buy-locked-msg').classList.toggle('hidden', isV);
+                document.getElementById('verify-status-tag').innerHTML = isV 
+                    ? '<span class="px-4 py-1.5 bg-green-50 text-green-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-100">Verified Member</span>' 
+                    : '<div class="space-y-3"><span class="px-4 py-1.5 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-100">Unverified Account</span><br><button onclick="window.resendV()" class="text-[10px] font-bold text-[#6c5ce7] underline">Resend Link</button></div>';
+
+                if (user.email === ADMIN_EMAIL) {
+                    document.getElementById('admin-actions').classList.remove('hidden');
+                    document.getElementById('admin-user-selector').classList.remove('hidden');
+                }
+                initChat();
+            } else {
+                document.getElementById('user-panel').classList.add('hidden');
+                document.getElementById('auth-box').classList.remove('hidden');
+                document.getElementById('user-avatar').classList.add('hidden');
+            }
+            renderProducts();
+            updateCartUI();
+        });
+
+        window.appLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email-in').value, document.getElementById('pass-in').value).catch(e => alert(e.message));
+        window.appRegister = () => createUserWithEmailAndPassword(auth, document.getElementById('email-up').value, document.getElementById('pass-up').value).then(r => sendEmailVerification(r.user)).catch(e => alert(e.message));
+        window.appLogout = () => signOut(auth);
+        window.forgotPassword = () => {
+            const email = document.getElementById('email-in').value;
+            if(!email) return alert("Masukkan email Anda di kolom Email Address terlebih dahulu.");
+            sendPasswordResetEmail(auth, email).then(() => alert("Email reset password telah dikirim ke " + email)).catch(e => alert(e.message));
+        };
+        window.resendV = () => user && sendEmailVerification(user).then(() => alert("Link verifikasi terkirim!"));
+
+        // --- MARKETPLACE LOGIC ---
+        const prodRef = collection(db, 'artifacts', APP_PATH, 'public', 'data', 'products');
+        onSnapshot(prodRef, (snap) => {
+            products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderProducts();
+        });
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const isV = user && (user.emailVerified || user.email === ADMIN_EMAIL);
+            grid.innerHTML = products.map(p => {
+                const stock = p.stock || 0;
+                return `
+                <div class="card-premium rounded-[32px] overflow-hidden flex flex-col group h-full">
+                    <div class="relative h-44 bg-gray-50 flex items-center justify-center p-6">
+                        <img src="${p.logo}" class="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/400?text=Pet+Image'">
+                        <div class="absolute top-3 left-3 px-3 py-1 bg-white/80 backdrop-blur-md rounded-full text-[8px] font-black uppercase tracking-widest text-[#6c5ce7] border border-white">
+                            ${p.cat || 'Premium'}
+                        </div>
+                        ${user?.email === ADMIN_EMAIL ? `
+                            <div class="absolute top-3 right-3 flex flex-col gap-2">
+                                <button onclick="window.editP('${p.id}')" class="w-8 h-8 bg-blue-500 text-white rounded-xl shadow-lg flex items-center justify-center text-xs"><i class="fas fa-pen"></i></button>
+                                <button onclick="window.deleteP('${p.id}')" class="w-8 h-8 bg-red-500 text-white rounded-xl shadow-lg flex items-center justify-center text-xs"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-800 line-clamp-1">${p.name}</h4>
+                            <div class="flex items-center justify-between mt-2">
+                                <p class="text-[#6c5ce7] font-black text-base">Rp ${Number(p.price).toLocaleString('id-ID')}</p>
+                                <span class="text-[9px] font-bold ${stock > 0 ? 'text-green-500' : 'text-red-400'} uppercase">Stok: ${stock}</span>
+                            </div>
+                        </div>
+                        <button onclick="window.addToCart('${p.id}')" 
+                            class="w-full mt-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isV && stock > 0 ? 'bg-[#6c5ce7] text-white shadow-lg shadow-[#6c5ce7]/20 active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}"
+                            ${(!isV || stock <= 0) ? 'disabled' : ''}>
+                            ${stock > 0 ? (isV ? 'Ambil Pet' : 'Verifikasi Dulu') : 'Out of Stock'}
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.saveProduct = async () => {
+            const btn = document.getElementById('btn-save');
+            btn.disabled = true;
+            const data = {
+                name: document.getElementById('p-name').value,
+                price: Number(document.getElementById('p-price').value),
+                stock: Number(document.getElementById('p-stock').value),
+                cat: document.getElementById('p-cat').value,
+                logo: document.getElementById('p-logo').value.trim(),
+                description: document.getElementById('p-desc').value,
+                updatedAt: serverTimestamp()
+            };
+            if (editId) await updateDoc(doc(db, 'artifacts', APP_PATH, 'public', 'data', 'products', editId), data);
+            else await addDoc(prodRef, data);
+            window.closeAdminModal();
+            btn.disabled = false;
+        };
+
+        // --- CART LOGIC ---
+        window.addToCart = (id) => {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock <= 0) return;
+            const exist = cart.find(x => x.id === id);
+            if (exist) {
+                if (exist.qty < p.stock) exist.qty++;
+                else alert("Stok maksimal tercapai!");
+            } else {
+                cart.push({ id: p.id, name: p.name, price: p.price, logo: p.logo, qty: 1 });
+            }
+            saveCart();
+            document.getElementById('cart-badge').classList.remove('scale-0');
+            document.getElementById('cart-badge').classList.add('scale-100');
+        };
+
+        window.checkout = async () => {
+            if (cart.length === 0) return;
+            try {
+                let detail = "🛍️ **PESANAN BARU** 🛍️\n----------------------\n";
+                for (const item of cart) {
+                    const pDoc = doc(db, 'artifacts', APP_PATH, 'public', 'data', 'products', item.id);
+                    await runTransaction(db, async (tx) => {
+                        const sf = await tx.get(pDoc);
+                        const ns = sf.data().stock - item.qty;
+                        if (ns < 0) throw `Stok ${item.name} tidak cukup!`;
+                        tx.update(pDoc, { stock: ns });
+                    });
+                    detail += `📦 Pet: ${item.name}\n🔢 Jumlah: ${item.qty}\n💰 Sub: Rp ${(item.price * item.qty).toLocaleString('id-ID')}\n----------------------\n`;
+                }
+                const total = document.getElementById('cart-total').textContent;
+                window.sendMessage(`${detail}**TOTAL BAYAR: ${total}**\n\n_Mohon tunggu admin memproses trade Anda._`);
+                alert("Pesanan Berhasil! Cek menu Chat untuk berdiskusi dengan Admin.");
+                cart = [];
+                saveCart();
+                toggleCart();
+                showView('chat');
+            } catch (e) { alert("Checkout Gagal: " + e); }
+        };
+
+        function updateCartUI() {
+            const count = cart.reduce((a, b) => a + b.qty, 0);
+            document.getElementById('cart-badge').textContent = count;
+            document.getElementById('cart-badge').classList.toggle('scale-0', count === 0);
+            let total = 0;
+            document.getElementById('cart-items').innerHTML = cart.map((it, idx) => {
+                total += it.price * it.qty;
+                return `
+                <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-3xl">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2"><img src="${it.logo}" class="max-h-full object-contain"></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-black truncate">${it.name}</p>
+                        <p class="text-[10px] text-[#6c5ce7] font-bold">Rp ${it.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-1">
+                        <button onclick="window.modQty(${idx}, 1)" class="text-[#6c5ce7]"><i class="fas fa-chevron-up text-[10px]"></i></button>
+                        <span class="text-xs font-black">${it.qty}</span>
+                        <button onclick="window.modQty(${idx}, -1)" class="text-gray-400"><i class="fas fa-chevron-down text-[10px]"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+            document.getElementById('cart-total').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        window.modQty = (idx, d) => {
+            const item = cart[idx];
+            const p = products.find(x => x.id === item.id);
+            item.qty += d;
+            if (p && item.qty > p.stock) item.qty = p.stock;
+            if (item.qty < 1) cart.splice(idx, 1);
+            saveCart();
+        };
+
+        function saveCart() {
+            localStorage.setItem('petrx_cart_v4', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        // --- UTILITIES ---
+        window.showView = (v) => {
+            ['home', 'buy', 'chat', 'profile'].forEach(x => document.getElementById(`view-${x}`).classList.add('hidden'));
+            document.getElementById(`view-${v}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                const active = b.getAttribute('data-v') === v;
+                b.classList.toggle('nav-active', active);
+            });
+            window.scrollTo(0, 0);
+        };
+        window.toggleCart = () => document.getElementById('cart-drawer').classList.toggle('translate-x-full');
+        window.openAdminModal = () => { editId = null; document.getElementById('modal-title').textContent = "Tambah Produk"; document.getElementById('modal-admin').classList.remove('hidden'); };
+        window.closeAdminModal = () => document.getElementById('modal-admin').classList.add('hidden');
+        window.editP = (id) => {
+            const p = products.find(x => x.id === id);
+            editId = id;
+            document.getElementById('p-name').value = p.name;
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-stock').value = p.stock;
+            document.getElementById('p-logo').value = p.logo;
+            document.getElementById('p-desc').value = p.description || '';
+            document.getElementById('p-cat').value = p.cat || 'Legendary';
+            document.getElementById('modal-admin').classList.remove('hidden');
+        };
+        window.deleteP = async (id) => { if(confirm("Hapus produk?")) await deleteDoc(doc(db, 'artifacts', APP_PATH, 'public', 'data', 'products', id)); };
+        window.toggleAuth = (r) => { document.getElementById('login-ui').classList.toggle('hidden', r); document.getElementById('register-ui').classList.toggle('hidden', !r); };
+
+        // --- CHAT SYSTEM ---
+        let selectedChatUserId = null;
+        function initChat() {
+            if(!user) return;
+            const target = user.email === ADMIN_EMAIL ? (selectedChatUserId || 'global') : user.uid;
+            onValue(ref(rtdb, `chats/${target}`), (snap) => {
+                const cont = document.getElementById('chat-messages');
+                if (!snap.exists()) return cont.innerHTML = '<div class="text-center py-10 opacity-20"><i class="fas fa-ghost text-5xl mb-4"></i><p class="text-xs font-bold uppercase tracking-widest">No Messages Yet</p></div>';
+                cont.innerHTML = Object.values(snap.val()).map(m => {
+                    const isMe = m.sender === user.uid;
+                    return `<div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
+                        <div class="max-w-[80%] ${isMe ? 'bg-[#6c5ce7] text-white rounded-3xl rounded-tr-none' : 'bg-white border rounded-3xl rounded-tl-none'} p-4 shadow-sm text-xs font-medium leading-relaxed">
+                            ${m.text.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>`;
+                }).join('');
+                cont.scrollTop = cont.scrollHeight;
+            });
+            if (user.email === ADMIN_EMAIL) {
+                onValue(ref(rtdb, 'chats'), (s) => {
+                    const sel = document.getElementById('chat-user-list');
+                    sel.innerHTML = '<option value="">📩 List Chat User</option>';
+                    if (s.exists()) Object.keys(s.val()).forEach(k => {
+                        const opt = document.createElement('option'); opt.value = k; opt.textContent = "UID: " + k.substring(0,8).toUpperCase();
+                        sel.appendChild(opt);
+                    });
+                });
+            }
+        }
+        window.sendMessage = (txt = null) => {
+            const val = txt || document.getElementById('chat-input').value;
+            const target = user.email === ADMIN_EMAIL ? selectedChatUserId : user.uid;
+            if (val.trim() && target) {
+                push(ref(rtdb, `chats/${target}`), { sender: user.uid, text: val, time: Date.now() });
+                document.getElementById('chat-input').value = '';
+            }
+        };
+        window.switchChatUser = (v) => { selectedChatUserId = v; initChat(); };
+
+    </script>
+</body>
+</html>
