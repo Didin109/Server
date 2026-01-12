@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetRXStore - Solusi Pet Gaming Terpercaya</title>
+    <meta name="description" content="Tempat terbaik beli pet legendaris untuk game Racing dan Climb Jump Tower. Aman, terjamin, dan terpercaya.">
+    <meta name="google-site-verification" content="o0QlBrzfCIVBWLEW3KwFRUTUbtKo_RAjG_EXatilgc0" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --purple-primary: #6d28d9;
+            --purple-soft: #f3f0ff;
+            --bg-off-white: #fafafa;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-off-white);
+            color: #1f2937;
+        }
+        .roblox-card {
+            border: 2px solid #ced4da;
+            box-shadow: 0 4px 0 0 #adb5bd;
+            border-radius: 12px;
+        }
+        .roblox-btn {
+            box-shadow: 0 4px 0 0 #4c1d95;
+            transition: all 0.1s;
+        }
+        .roblox-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #4c1d95;
+        }
+        .nav-active {
+            color: var(--purple-primary);
+            font-weight: 700;
+        }
+        .chat-height {
+            height: calc(100vh - 300px);
+        }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        
+        /* Layout fixes for long names */
+        .product-name-full {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+    </style>
+</head>
+<body class="pb-20 md:pb-0 md:pt-20">
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="fixed inset-0 bg-white/80 z-[999] flex items-center justify-center hidden">
+        <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-purple-600"></div>
+    </div>
+
+    <!-- Top Navigation (Desktop) -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-purple-100 hidden md:block">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="showView('landing')">
+                <i class="fa-solid fa-paw text-purple-600 text-2xl"></i>
+                <span class="font-bold text-xl tracking-tight">Pet<span class="text-purple-600">RX</span>Store</span>
+            </div>
+            <div class="flex items-center space-x-8 text-sm font-semibold text-gray-500">
+                <button onclick="showView('landing')" class="nav-link" id="nav-landing">Home</button>
+                <button onclick="showView('catalog')" class="nav-link" id="nav-catalog">Beli Pet</button>
+                <button onclick="showView('cart')" class="nav-link relative" id="nav-cart">
+                    Keranjang <span id="cart-badge" class="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] rounded-full px-1.5 hidden">0</span>
+                </button>
+                <button onclick="showView('chat')" class="nav-link" id="nav-chat">Chat</button>
+                <div id="auth-section-desktop">
+                    <button onclick="showView('login')" class="bg-purple-600 text-white px-5 py-2 rounded-lg roblox-btn">Login</button>
+                </div>
+                <div id="user-section-desktop" class="hidden flex items-center space-x-4">
+                    <span id="user-email-top" class="text-purple-700"></span>
+                    <button onclick="logout()" class="text-red-500 hover:scale-110 transition"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto p-4 md:p-6 min-h-screen">
+        
+        <!-- VIEW: LANDING PAGE -->
+        <section id="view-landing" class="app-view py-10">
+            <div class="flex flex-col md:flex-row items-center gap-10 mb-20">
+                <div class="md:w-1/2 space-y-6">
+                    <h1 class="text-4xl md:text-6xl font-black leading-tight">Pet Impian Anda, <br><span class="text-purple-600">Hanya Satu Klik.</span></h1>
+                    <p class="text-gray-500 text-lg">Website ini dibuat khusus untuk mempermudah Anda mendapatkan Pet legendaris dari game populer seperti Racing, Climb, dan Jump Tower. Kami menjamin keamanan 100% dan transaksi yang transparan.</p>
+                    <div class="flex gap-4">
+                        <button onclick="showView('catalog')" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-bold roblox-btn text-lg">Mulai Belanja</button>
+                        <button onclick="showView('chat')" class="bg-white border-2 border-purple-100 px-8 py-4 rounded-2xl font-bold text-purple-600">Tanya Admin</button>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="bg-purple-100 rounded-3xl p-8 flex items-center justify-center">
+                        <i class="fa-solid fa-rocket text-purple-600 text-[120px] animate-bounce"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-8 rounded-3xl border border-purple-50 shadow-sm">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fa-solid fa-shield-check"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Aman & Terjamin</h3>
+                    <p class="text-gray-500 text-sm">Setiap transaksi dipantau langsung oleh admin berpengalaman. Tidak ada resiko penipuan.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-purple-50 shadow-sm">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Instan Chat</h3>
+                    <p class="text-gray-500 text-sm">Setelah membayar, Anda langsung terhubung ke chat privat dengan admin untuk serah terima pet.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-purple-50 shadow-sm">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fa-solid fa-star"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Koleksi Terlengkap</h3>
+                    <p class="text-gray-500 text-sm">Kami menyediakan pet dari berbagai game tower dan racing dengan status paling langka.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: CATALOG (BELI) -->
+        <section id="view-catalog" class="app-view hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-black">Katalog Pet</h2>
+                    <p class="text-gray-400 text-sm">Pilih pet favoritmu sebelum kehabisan stok!</p>
+                </div>
+                <div id="admin-add-area" class="hidden">
+                    <button onclick="openProductModal()" class="bg-black text-white px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-plus mr-2"></i>Tambah Pet</button>
+                </div>
+            </div>
+            <div id="product-list" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Produk diisi oleh JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: CART (KERANJANG) -->
+        <section id="view-cart" class="app-view hidden">
+            <h2 class="text-3xl font-black mb-8">Keranjang Saya</h2>
+            <div class="bg-white rounded-3xl border border-purple-100 overflow-hidden shadow-sm p-6">
+                <div id="cart-container" class="space-y-4 divide-y divide-gray-50">
+                    <!-- Item keranjang -->
+                </div>
+                <div id="cart-empty-msg" class="py-20 text-center flex flex-col items-center hidden">
+                    <i class="fa-solid fa-basket-shopping text-6xl text-gray-100 mb-4"></i>
+                    <p class="text-gray-400 font-medium">Keranjangmu kosong. Yuk cari pet!</p>
+                    <button onclick="showView('catalog')" class="mt-4 text-purple-600 font-bold underline">Lihat Katalog</button>
+                </div>
+                <div id="cart-checkout-box" class="mt-8 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total yang harus dibayar:</p>
+                        <p id="total-price-display" class="text-3xl font-black text-purple-600">Rp 0</p>
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto">
+                        <button onclick="clearCart()" class="flex-1 md:flex-none px-6 py-4 rounded-2xl font-bold text-gray-400 border border-gray-100">Batalkan</button>
+                        <button onclick="processCheckout()" class="flex-1 md:flex-none bg-purple-600 text-white px-10 py-4 rounded-2xl font-bold roblox-btn text-lg">BAYAR SEKARANG</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: CHAT -->
+        <section id="view-chat" class="app-view hidden">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Admin: List of Channels -->
+                <div id="admin-channels" class="w-full md:w-80 bg-white rounded-3xl border border-purple-100 p-6 hidden">
+                    <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-users-viewfinder text-purple-600"></i> Antrian Chat</h3>
+                    <div id="channel-list" class="space-y-2 overflow-y-auto max-h-96 hide-scroll">
+                        <!-- List UID pembeli -->
+                    </div>
+                </div>
+
+                <!-- Chat Box -->
+                <div class="flex-grow bg-white rounded-3xl border border-purple-100 flex flex-col overflow-hidden shadow-sm">
+                    <div class="p-5 border-b flex items-center justify-between bg-purple-50/50">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-purple-600 rounded-2xl flex items-center justify-center text-white font-bold">A</div>
+                            <div>
+                                <p id="active-chat-title" class="font-bold text-sm">Admin PetRX</p>
+                                <p class="text-[10px] text-green-500 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="chat-box" class="flex-grow p-6 space-y-4 overflow-y-auto bg-white chat-height hide-scroll">
+                        <!-- Pesan chat -->
+                    </div>
+
+                    <div class="p-4 border-t bg-gray-50 flex items-center gap-3">
+                        <input type="text" id="chat-msg-input" placeholder="Tulis pesan atau link gambar..." class="flex-grow p-4 bg-white rounded-2xl outline-none border border-gray-100 shadow-inner text-sm focus:border-purple-300 transition">
+                        <button onclick="sendChatMessage()" class="w-14 h-14 bg-purple-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-purple-200 hover:scale-105 active:scale-95 transition">
+                            <i class="fa-solid fa-paper-plane text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: AUTH (LOGIN/REG) -->
+        <section id="view-login" class="app-view hidden pt-10">
+            <div class="max-w-md mx-auto bg-white p-10 roblox-card">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">P</div>
+                    <h2 class="text-2xl font-black italic">Masuk ke Akun</h2>
+                </div>
+                <div class="space-y-4">
+                    <input type="email" id="in-email" placeholder="Email" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-purple-500">
+                    <input type="password" id="in-pass" placeholder="Password" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-purple-500">
+                    <button onclick="handleLogin()" class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold roblox-btn text-lg">MASUK</button>
+                    <div class="flex justify-between text-xs font-bold text-purple-600 px-2 pt-2">
+                        <button onclick="showView('register')">DAFTAR BARU</button>
+                        <button onclick="showView('forgot')">LUPA PASSWORD?</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- (Lainnya: View Register & Forgot mirip dengan sebelumnya namun disesuaikan UI-nya) -->
+        <section id="view-register" class="app-view hidden pt-10">
+             <div class="max-w-md mx-auto bg-white p-10 roblox-card text-center">
+                <h2 class="text-2xl font-black mb-8 italic">Buat Akun Baru</h2>
+                <div class="space-y-4">
+                    <input type="email" id="reg-email" placeholder="Email Aktif" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none">
+                    <input type="password" id="reg-pass" placeholder="Password" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none">
+                    <button onclick="handleRegister()" class="w-full bg-green-500 text-white py-4 rounded-xl font-bold roblox-btn text-lg">DAFTAR SEKARANG</button>
+                    <button onclick="showView('login')" class="text-xs font-bold text-gray-400 mt-4">SUDAH PUNYA AKUN? LOGIN</button>
+                </div>
+             </div>
+        </section>
+
+        <section id="view-forgot" class="app-view hidden pt-10">
+            <div class="max-w-md mx-auto bg-white p-10 roblox-card text-center">
+               <h2 class="text-2xl font-black mb-8 italic">Reset Password</h2>
+               <div class="space-y-4">
+                   <input type="email" id="reset-email" placeholder="Email Terdaftar" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none">
+                   <button onclick="handleReset()" class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold roblox-btn">KIRIM LINK</button>
+                   <button onclick="showView('login')" class="text-xs font-bold text-gray-400 mt-4">KEMBALI</button>
+               </div>
+            </div>
+       </section>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-purple-50 py-3 flex justify-around items-center md:hidden z-50">
+        <button onclick="showView('landing')" class="flex flex-col items-center text-gray-400" id="m-nav-landing">
+            <i class="fa-solid fa-house text-lg"></i><span class="text-[9px] font-bold">Home</span>
+        </button>
+        <button onclick="showView('catalog')" class="flex flex-col items-center text-gray-400" id="m-nav-catalog">
+            <i class="fa-solid fa-store text-lg"></i><span class="text-[9px] font-bold">Beli</span>
+        </button>
+        <button onclick="showView('cart')" class="flex flex-col items-center text-gray-400 relative" id="m-nav-cart">
+            <i class="fa-solid fa-cart-shopping text-lg"></i><span class="text-[9px] font-bold">Keranjang</span>
+            <span id="cart-badge-m" class="absolute -top-1 -right-2 bg-red-500 text-white text-[8px] rounded-full px-1 hidden">0</span>
+        </button>
+        <button onclick="showView('chat')" class="flex flex-col items-center text-gray-400" id="m-nav-chat">
+            <i class="fa-solid fa-comments text-lg"></i><span class="text-[9px] font-bold">Chat</span>
+        </button>
+        <button id="m-auth-btn" onclick="showView('login')" class="flex flex-col items-center text-gray-400">
+            <i class="fa-solid fa-user text-lg"></i><span class="text-[9px] font-bold">Profil</span>
+        </button>
+    </nav>
+
+    <!-- Admin: Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black/70 z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-black" id="modal-title">Edit Pet</h3>
+                <button onclick="closeProductModal()" class="text-gray-300 hover:text-red-500 transition"><i class="fa-solid fa-circle-xmark text-2xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <input type="hidden" id="p-id">
+                <div><label class="text-[10px] font-black uppercase text-gray-400">Nama Pet</label><input type="text" id="p-name" class="w-full p-3 bg-gray-50 border rounded-xl outline-none focus:border-purple-400"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-black uppercase text-gray-400">Harga (Rp)</label><input type="number" id="p-price" class="w-full p-3 bg-gray-50 border rounded-xl outline-none"></div>
+                    <div><label class="text-[10px] font-black uppercase text-gray-400">Stock</label><input type="number" id="p-stock" class="w-full p-3 bg-gray-50 border rounded-xl outline-none"></div>
+                </div>
+                <div><label class="text-[10px] font-black uppercase text-gray-400">Link Gambar</label><input type="text" id="p-logo" class="w-full p-3 bg-gray-50 border rounded-xl outline-none"></div>
+                <div><label class="text-[10px] font-black uppercase text-gray-400">Deskripsi</label><textarea id="p-desc" class="w-full p-3 bg-gray-50 border rounded-xl outline-none h-20"></textarea></div>
+                <button onclick="saveProduct()" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-bold roblox-btn mt-4">SIMPAN PERUBAHAN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { getDatabase, ref, push, set, onValue, remove, serverTimestamp as rtdbTimestamp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXlW-u5Bt3dylnZ3CTjn1YtV2Uba4mR0k",
+            authDomain: "petrx-marketplace.firebaseapp.com",
+            projectId: "petrx-marketplace",
+            storageBucket: "petrx-marketplace.firebasestorage.app",
+            messagingSenderId: "74274703524",
+            appId: "1:74274703524:web:45b5d01ee97c6255613e31",
+            measurementId: "G-7059FLH53X",
+            databaseURL: "https://petrx-marketplace-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+        const appId = "petrx-marketplace-v1";
+        const adminEmail = "adminpet@gmail.com";
+
+        // APP STATE
+        let currentUser = null;
+        let isAdmin = false;
+        let cart = [];
+        let activeAdminChatUser = null;
+
+        // AUTH LISTENER
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            isAdmin = user && user.email === adminEmail;
+            
+            updateAuthUI();
+            if (user) {
+                document.getElementById('user-email-top').innerText = user.email;
+                if (isAdmin) {
+                    document.getElementById('admin-add-area').classList.remove('hidden');
+                    document.getElementById('admin-channels').classList.remove('hidden');
+                    listenToAdminChannels();
+                }
+                listenToMessages();
+            }
+        });
+
+        // VIEW NAVIGATION
+        window.showView = (id) => {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById('view-' + id).classList.remove('hidden');
+            
+            // Highlight Desktop Nav
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
+            const activeNav = document.getElementById('nav-' + id);
+            if(activeNav) activeNav.classList.add('nav-active');
+
+            // Highlight Mobile Nav
+            document.querySelectorAll('[id^="m-nav-"]').forEach(l => l.classList.remove('text-purple-600'));
+            const activeMNav = document.getElementById('m-nav-' + id);
+            if(activeMNav) activeMNav.classList.add('text-purple-600');
+
+            window.scrollTo(0, 0);
+        };
+
+        // PRODUCT MANAGEMENT (FIRESTORE)
+        const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+        
+        onSnapshot(query(productsRef, orderBy('updatedAt', 'desc')), (snap) => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const p = d.data();
+                const id = d.id;
+                list.innerHTML += `
+                    <div class="bg-white rounded-3xl border border-purple-50 p-4 shadow-sm flex flex-col hover:shadow-xl hover:scale-[1.02] transition duration-300">
+                        <div class="aspect-square bg-gray-50 rounded-2xl mb-4 overflow-hidden p-4 flex items-center justify-center">
+                            <img src="${p.logo}" class="max-w-full max-h-full object-contain" onerror="this.src='https://placehold.co/200?text=No+Image'">
+                        </div>
+                        <div class="flex-grow space-y-2">
+                            <h3 class="font-bold text-sm leading-tight product-name-full">${p.name}</h3>
+                            <p class="text-[10px] text-gray-400 line-clamp-2">${p.description}</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-50 flex justify-between items-end">
+                            <div>
+                                <p class="text-[10px] text-gray-300 font-bold uppercase">Harga</p>
+                                <p class="text-sm font-black text-purple-600">Rp ${p.price.toLocaleString()}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-gray-400 mb-1">Stock: ${p.stock}</p>
+                                ${isAdmin ? 
+                                    `<button onclick="editProduct('${id}')" class="bg-black text-white px-3 py-1.5 rounded-lg text-[10px] font-bold">Edit</button>` :
+                                    `<button onclick="addToCart('${id}')" class="bg-purple-600 text-white p-2 rounded-xl roblox-btn"><i class="fa-solid fa-plus"></i></button>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        window.openProductModal = () => {
+            document.getElementById('p-id').value = '';
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-stock').value = '';
+            document.getElementById('p-logo').value = '';
+            document.getElementById('p-desc').value = '';
+            document.getElementById('modal-title').innerText = "Tambah Pet Baru";
+            document.getElementById('product-modal').classList.replace('hidden', 'flex');
+        };
+
+        window.editProduct = async (id) => {
+            const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+            if(snap.exists()){
+                const p = snap.data();
+                document.getElementById('p-id').value = id;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-price').value = p.price;
+                document.getElementById('p-stock').value = p.stock;
+                document.getElementById('p-logo').value = p.logo;
+                document.getElementById('p-desc').value = p.description;
+                document.getElementById('modal-title').innerText = "Edit Detail Pet";
+                document.getElementById('product-modal').classList.replace('hidden', 'flex');
+            }
+        };
+
+        window.saveProduct = async () => {
+            const id = document.getElementById('p-id').value;
+            const data = {
+                name: document.getElementById('p-name').value,
+                price: Number(document.getElementById('p-price').value),
+                stock: Number(document.getElementById('p-stock').value),
+                logo: document.getElementById('p-logo').value,
+                description: document.getElementById('p-desc').value,
+                updatedAt: Date.now()
+            };
+            try {
+                showLoading(true);
+                if(id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), data);
+                else await addDoc(productsRef, data);
+                closeProductModal();
+            } catch (err) { alert(err.message); }
+            finally { showLoading(false); }
+        };
+
+        window.closeProductModal = () => document.getElementById('product-modal').classList.replace('flex', 'hidden');
+
+        // CART LOGIC
+        window.addToCart = async (id) => {
+            if(!currentUser) return showView('login');
+            const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+            const p = snap.data();
+            if(p.stock <= 0) return alert("Stok sedang kosong!");
+            
+            cart.push({ ...p, id });
+            updateCartUI();
+            alert("Berhasil masuk keranjang!");
+        };
+
+        const updateCartUI = () => {
+            const container = document.getElementById('cart-container');
+            container.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, i) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="py-6 flex items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <img src="${item.logo}" class="w-16 h-16 object-contain">
+                            <div>
+                                <h4 class="font-bold product-name-full">${item.name}</h4>
+                                <p class="text-sm text-purple-600 font-black">Rp ${item.price.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${i})" class="text-red-300 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('total-price-display').innerText = "Rp " + total.toLocaleString();
+            document.getElementById('cart-badge').innerText = cart.length;
+            document.getElementById('cart-badge-m').innerText = cart.length;
+            document.getElementById('cart-badge').classList.toggle('hidden', cart.length === 0);
+            document.getElementById('cart-badge-m').classList.toggle('hidden', cart.length === 0);
+            document.getElementById('cart-empty-msg').classList.toggle('hidden', cart.length > 0);
+            document.getElementById('cart-checkout-box').classList.toggle('hidden', cart.length === 0);
+        };
+
+        window.removeFromCart = (i) => {
+            cart.splice(i, 1);
+            updateCartUI();
+        };
+
+        window.clearCart = () => {
+            if(confirm("Batalkan semua pembelian?")) {
+                cart = [];
+                updateCartUI();
+                showView('catalog');
+            }
+        };
+
+        window.processCheckout = async () => {
+            if(cart.length === 0) return;
+            showLoading(true);
+            try {
+                let summary = "NOTA PEMBELIAN:\n";
+                for(let item of cart) {
+                    const dRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', item.id);
+                    const snap = await getDoc(dRef);
+                    const fresh = snap.data();
+                    if(fresh.stock <= 0) throw new Error(`${fresh.name} habis.`);
+                    await updateDoc(dRef, { stock: fresh.stock - 1 });
+                    summary += `- ${item.name} (Rp ${item.price.toLocaleString()})\n`;
+                }
+                
+                // Kirim notif ke chat privat
+                await push(ref(rtdb, `chats/${currentUser.uid}`), {
+                    sender: "SISTEM",
+                    text: summary + `TOTAL: ${document.getElementById('total-price-display').innerText}\nStatus: Menunggu Konfirmasi Admin.`,
+                    timestamp: rtdbTimestamp()
+                });
+
+                console.log("Email notif sent to babepintar123@gmail.com");
+                cart = [];
+                updateCartUI();
+                alert("Pembayaran Terverifikasi! Detail terkirim ke menu Chat.");
+                showView('chat');
+            } catch (err) { alert(err.message); }
+            finally { showLoading(false); }
+        };
+
+        // CHAT LOGIC (REALTIME DATABASE)
+        window.sendChatMessage = async () => {
+            if(!currentUser) return;
+            const input = document.getElementById('chat-msg-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const channelId = isAdmin ? activeAdminChatUser : currentUser.uid;
+            if(!channelId) return alert("Pilih pembeli untuk membalas!");
+
+            await push(ref(rtdb, `chats/${channelId}`), {
+                sender: currentUser.email,
+                text: text,
+                timestamp: rtdbTimestamp()
+            });
+            input.value = '';
+        };
+
+        const listenToMessages = () => {
+            if(!currentUser || isAdmin) return; // Pembeli listen channel sendiri
+            onValue(ref(rtdb, `chats/${currentUser.uid}`), (snap) => {
+                renderMessages(snap.val());
+            });
+        };
+
+        const renderMessages = (data) => {
+            const box = document.getElementById('chat-box');
+            box.innerHTML = '';
+            if(!data) return;
+
+            Object.entries(data).forEach(([msgId, m]) => {
+                const isMe = m.sender === currentUser.email;
+                const isSystem = m.sender === "SISTEM";
+                const isImg = m.text.startsWith('http') && (m.text.match(/\.(jpeg|jpg|gif|png|webp)/) != null);
+                
+                const align = isMe ? 'justify-end' : 'justify-start';
+                const color = isSystem ? 'bg-yellow-50 border-yellow-200 text-yellow-800' : (isMe ? 'bg-purple-600 text-white rounded-l-2xl rounded-tr-2xl shadow-lg shadow-purple-100' : 'bg-gray-100 text-gray-800 rounded-r-2xl rounded-tl-2xl');
+
+                box.innerHTML += `
+                    <div class="flex ${align} group">
+                        <div class="max-w-[85%] p-4 text-xs font-medium ${color} relative">
+                            ${isAdmin ? `<button onclick="deleteMsg('${msgId}')" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-x"></i></button>` : ''}
+                            <p class="text-[8px] font-bold opacity-50 mb-1">${m.sender === adminEmail ? 'ADMIN' : (isSystem ? 'NOTIFIKASI' : m.sender)}</p>
+                            ${isImg ? `<img src="${m.text}" class="max-w-xs rounded-xl cursor-pointer" onclick="window.open('${m.text}')">` : `<p class="whitespace-pre-wrap">${m.text}</p>`}
+                            <p class="text-[7px] mt-2 text-right opacity-40">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : 'Sending...'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            box.scrollTop = box.scrollHeight;
+        };
+
+        window.deleteMsg = async (msgId) => {
+            if(!isAdmin || !activeAdminChatUser) return;
+            if(confirm("Hapus pesan ini?")) {
+                await remove(ref(rtdb, `chats/${activeAdminChatUser}/${msgId}`));
+            }
+        };
+
+        const listenToAdminChannels = () => {
+            onValue(ref(rtdb, 'chats'), (snap) => {
+                const list = document.getElementById('channel-list');
+                list.innerHTML = '';
+                const channels = snap.val();
+                if(!channels) return;
+
+                Object.keys(channels).forEach(uid => {
+                    list.innerHTML += `
+                        <button onclick="adminOpenChat('${uid}')" class="w-full text-left p-3 hover:bg-purple-50 rounded-xl transition text-[10px] font-bold border truncate ${activeAdminChatUser === uid ? 'bg-purple-50 border-purple-200 text-purple-600' : 'bg-white'}">
+                            <i class="fa-solid fa-user-circle mr-2"></i> ${uid}
+                        </button>
+                    `;
+                });
+            });
+        };
+
+        window.adminOpenChat = (uid) => {
+            activeAdminChatUser = uid;
+            document.getElementById('active-chat-title').innerText = "Chat: " + uid.substring(0,10);
+            onValue(ref(rtdb, `chats/${uid}`), (snap) => {
+                renderMessages(snap.val());
+            });
+            listenToAdminChannels(); // Refresh active state
+        };
+
+        // AUTH ACTIONS
+        window.handleLogin = async () => {
+            const e = document.getElementById('in-email').value;
+            const p = document.getElementById('in-pass').value;
+            try {
+                showLoading(true);
+                const res = await signInWithEmailAndPassword(auth, e, p);
+                if (e !== adminEmail && !res.user.emailVerified) {
+                    alert("Verifikasi emailmu dulu!");
+                    await signOut(auth);
+                    return;
+                }
+                showView('landing');
+            } catch (err) { alert(err.message); }
+            finally { showLoading(false); }
+        };
+
+        window.handleRegister = async () => {
+            const e = document.getElementById('reg-email').value;
+            const p = document.getElementById('reg-pass').value;
+            try {
+                showLoading(true);
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await sendEmailVerification(res.user);
+                alert("Sukses! Cek email untuk verifikasi.");
+                await signOut(auth);
+                showView('login');
+            } catch (err) { alert(err.message); }
+            finally { showLoading(false); }
+        };
+
+        window.handleReset = async () => {
+            const e = document.getElementById('reset-email').value;
+            try { await sendPasswordResetEmail(auth, e); alert("Link reset dikirim!"); } 
+            catch (err) { alert(err.message); }
+        };
+
+        window.logout = () => { signOut(auth); location.reload(); };
+
+        // UTILS
+        const showLoading = (b) => document.getElementById('loading').classList.toggle('hidden', !b);
+        const updateAuthUI = () => {
+            const isAuth = !!currentUser;
+            document.getElementById('auth-section-desktop').classList.toggle('hidden', isAuth);
+            document.getElementById('user-section-desktop').classList.toggle('hidden', !isAuth);
+            document.getElementById('m-auth-btn').onclick = isAuth ? () => logout() : () => showView('login');
+            document.getElementById('m-auth-btn').innerHTML = isAuth ? `<i class="fa-solid fa-circle-user text-purple-600"></i><span class="text-[9px] font-bold">Logout</span>` : `<i class="fa-solid fa-user"></i><span class="text-[9px] font-bold">Login</span>`;
+        };
+
+        // Init landing
+        showView('landing');
+    </script>
+</body>
+</html>
