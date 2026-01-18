@@ -10,6 +10,10 @@
     <meta name="keywords" content="Jual Pet Roblox, PetRXStore, Beli Pet Murah, Racing Climb and Jump Tower, Adopt Me, Pet Simulator Roblox, Toko Item Roblox">
     <meta name="author" content="PetRXStore Team">
     <meta name="robots" content="index, follow">
+
+    <!-- ICON / FAVICON -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,6 +71,14 @@
             letter-spacing: 0.5px;
             display: inline-block;
             margin-bottom: 4px;
+        }
+        .tag-filter-btn {
+            transition: all 0.2s;
+        }
+        .tag-filter-btn.active {
+            background-color: #6D28D9;
+            color: white;
+            border-color: #6D28D9;
         }
     </style>
 </head>
@@ -163,7 +175,7 @@
 
         <!-- HALAMAN: KATALOG -->
         <section id="page-beli" class="page hidden py-6">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <h2 class="text-2xl font-bold text-purple-900">Katalog Produk</h2>
                 <div id="admin-actions" class="hidden">
                     <button onclick="openAdminModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 font-bold">
@@ -171,6 +183,17 @@
                     </button>
                 </div>
             </div>
+
+            <!-- FILTER TAG SECTION -->
+            <div id="tag-filters" class="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-2 no-scrollbar">
+                <button onclick="filterByTag('all')" class="tag-filter-btn active border-2 border-purple-100 bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap">
+                    SEMUA ITEM
+                </button>
+                <div id="dynamic-tags" class="flex gap-2">
+                    <!-- Tags dari database muncul disini -->
+                </div>
+            </div>
+
             <!-- Div ini akan diisi oleh JS -->
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div class="col-span-full py-20 text-center text-gray-400 italic">Memuat produk...</div>
@@ -287,7 +310,7 @@
             <form id="p-form" class="p-6 space-y-4">
                 <input type="hidden" id="p-id">
                 
-                <!-- NEW: Input Tag/Game -->
+                <!-- Input Tag/Game -->
                 <div class="space-y-1 bg-blue-50 p-3 rounded border border-blue-100">
                     <label class="text-xs font-bold text-blue-600">TAG / NAMA GAME</label>
                     <input type="text" id="in-tag" class="w-full border p-2 rounded focus:ring-1 ring-blue-500 outline-none" placeholder="Contoh: Racing, Adopt Me, dll...">
@@ -352,6 +375,7 @@
         let cart = [];
         let products = [];
         let activeChatUserId = null;
+        let activeTag = 'all';
 
         // UI Helpers
         window.switchPage = (pageId) => {
@@ -370,6 +394,29 @@
             t.style.backgroundColor = error ? '#EF4444' : '#10B981';
             t.classList.remove('translate-x-[150%]');
             setTimeout(() => t.classList.add('translate-x-[150%]'), 3000);
+        }
+
+        // TAG FILTER LOGIC
+        window.filterByTag = (tag) => {
+            activeTag = tag;
+            // Update UI buttons
+            document.querySelectorAll('.tag-filter-btn').forEach(btn => btn.classList.remove('active'));
+            const target = Array.from(document.querySelectorAll('.tag-filter-btn')).find(el => el.textContent.trim().toLowerCase() === tag.toLowerCase() || (tag === 'all' && el.textContent.includes('SEMUA')));
+            if(target) target.classList.add('active');
+            
+            renderProducts();
+        };
+
+        function updateTagFilters() {
+            const tagContainer = document.getElementById('dynamic-tags');
+            // Ambil semua tag unik dari produk
+            const uniqueTags = [...new Set(products.map(p => p.tag).filter(t => t))];
+            
+            tagContainer.innerHTML = uniqueTags.map(tag => `
+                <button onclick="filterByTag('${tag}')" class="tag-filter-btn ${activeTag === tag ? 'active' : ''} border-2 border-purple-100 bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase">
+                    ${tag}
+                </button>
+            `).join('');
         }
 
         // AUTH
@@ -417,15 +464,22 @@
         function fetchProducts() {
             onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
                 products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                updateTagFilters();
                 renderProducts();
             });
         }
 
         function renderProducts() {
             const list = document.getElementById('product-list');
-            if (products.length === 0) return list.innerHTML = '<div class="col-span-full py-10 text-center">Belum ada stok pet.</div>';
             
-            list.innerHTML = products.map(p => `
+            // Filter products based on activeTag
+            const filteredProducts = activeTag === 'all' 
+                ? products 
+                : products.filter(p => p.tag && p.tag.toLowerCase() === activeTag.toLowerCase());
+
+            if (filteredProducts.length === 0) return list.innerHTML = '<div class="col-span-full py-10 text-center">Tidak ada item di kategori ini.</div>';
+            
+            list.innerHTML = filteredProducts.map(p => `
                 <div class="bg-white rounded-2xl border border-purple-50 overflow-hidden shadow-sm flex flex-col h-full hover:shadow-md transition-all">
                     <div class="h-40 p-4 flex items-center justify-center bg-white relative">
                         <img src="${p.logo}" alt="Jual ${p.name}" class="max-h-full max-w-full">
@@ -487,7 +541,7 @@
                     <div class="bg-white p-4 rounded-2xl border border-purple-50 flex items-center gap-4">
                         <img src="${it.logo}" alt="${it.name}" class="w-16 h-16 object-contain">
                         <div class="flex-1">
-                            ${it.tag ? `<span class="text-[9px] text-blue-500 font-bold border border-blue-200 px-1 rounded bg-blue-50">${it.tag}</span>` : ''}
+                            ${it.tag ? `<span class="text-[9px] text-blue-500 font-bold border border-blue-200 px-1 rounded bg-blue-50 uppercase">${it.tag}</span>` : ''}
                             <h4 class="font-bold text-sm">${it.name}</h4>
                             <p class="text-purple-600 font-bold text-xs">Rp ${it.price.toLocaleString()}</p>
                         </div>
@@ -662,7 +716,7 @@
             e.preventDefault();
             const id = document.getElementById('p-id').value;
             const data = {
-                tag: document.getElementById('in-tag').value, // SAVING TAG
+                tag: document.getElementById('in-tag').value, 
                 name: document.getElementById('in-name').value,
                 price: Number(document.getElementById('in-price').value),
                 stock: Number(document.getElementById('in-stock').value),
@@ -682,7 +736,7 @@
         window.editP = (id) => {
             const p = products.find(x => x.id === id);
             document.getElementById('p-id').value = id;
-            document.getElementById('in-tag').value = p.tag || ''; // LOADING TAG
+            document.getElementById('in-tag').value = p.tag || ''; 
             document.getElementById('in-name').value = p.name;
             document.getElementById('in-price').value = p.price;
             document.getElementById('in-stock').value = p.stock;
