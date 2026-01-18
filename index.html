@@ -4,60 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO UTAMA: Judul & Deskripsi yang lebih kaya kata kunci -->
-    <title>PetRXStore | Jual Pet Roblox Murah & Aman - Racing Climb & Jump Tower</title>
-    <meta name="description" content="PetRXStore adalah marketplace terpercaya untuk beli Pet Roblox game Racing, Climb and Jump Tower. Transaksi aman, pengiriman instan, harga termurah, dan stok terbatas!">
-    <meta name="keywords" content="Jual Pet Roblox, PetRXStore, Beli Pet Murah, Racing Climb and Jump Tower, Pet Simulator Roblox, Toko Item Roblox, Roblox Indonesia, Transaksi Aman">
+    <!-- SEO UTAMA -->
+    <title>PetRXStore | Jual Pet Roblox Murah - Racing, Adopt Me, dll</title>
+    <meta name="description" content="PetRXStore adalah marketplace terpercaya untuk beli Pet Roblox berbagai game seperti Racing, Adopt Me, Climb and Jump Tower. Transaksi aman, harga termurah!">
+    <meta name="keywords" content="Jual Pet Roblox, PetRXStore, Beli Pet Murah, Racing Climb and Jump Tower, Adopt Me, Pet Simulator Roblox, Toko Item Roblox">
     <meta name="author" content="PetRXStore Team">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="Indonesian">
-    
-    <!-- Verifikasi Google (Existing) -->
-    <meta name="google-site-verification" content="o0QlBrzfCIVBWLEW3KwFRUTUbtKo_RAjG_EXatilgc0" />
-    
-    <link rel="icon" type="image/png" href="icon.png">
-    
-    <!-- Open Graph / Facebook / WhatsApp Preview -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://petrx-marketplace.firebaseapp.com/">
-    <meta property="og:title" content="PetRXStore | Jual Pet Roblox Murah & Aman">
-    <meta property="og:description" content="Pusat jual beli Pet Roblox Racing, Climb and Jump Tower. Aman, Cepat, Terpercaya. Cek katalog kami sekarang!">
-    <meta property="og:image" content="https://petrx-marketplace.firebaseapp.com/icon.png">
-    <meta property="og:locale" content="id_ID">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://petrx-marketplace.firebaseapp.com/">
-    <meta name="twitter:title" content="PetRXStore | Jual Pet Roblox Murah & Aman">
-    <meta name="twitter:description" content="Pusat jual beli Pet Roblox Racing, Climb and Jump Tower. Aman, Cepat, Terpercaya.">
-    <meta name="twitter:image" content="https://petrx-marketplace.firebaseapp.com/icon.png">
-
-    <!-- Schema.org Structured Data (Agar Google mengerti ini adalah Toko Online) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "OnlineStore",
-      "name": "PetRXStore",
-      "image": "https://petrx-marketplace.firebaseapp.com/icon.png",
-      "description": "PetRXStore adalah tempat terbaik beli pet untuk game Racing, Climb and Jump Tower. Transaksi aman dan terjamin.",
-      "url": "https://petrx-marketplace.firebaseapp.com/",
-      "priceRange": "Rp1000 - Rp1000000",
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday"
-        ],
-        "opens": "00:00",
-        "closes": "23:59"
-      }
-    }
-    </script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -101,6 +53,20 @@
             color: #1F2937;
             border: 1px solid #E5E7EB;
             border-radius: 15px 15px 15px 2px;
+        }
+        /* Tag Badge Style */
+        .game-tag {
+            background: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #DBEAFE;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -166,10 +132,9 @@
         <!-- HALAMAN: HOME -->
         <section id="page-home" class="page py-10">
             <div class="text-center space-y-6">
-                <!-- H1 sangat penting untuk SEO -->
                 <h1 class="text-4xl md:text-6xl font-extrabold text-purple-900">PetRXStore</h1>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Beli Pet legendaris untuk game <span class="text-purple-600 font-bold">Roblox</span> <span class="text-purple-600 font-bold">Racing, Climb and Jump Tower</span> dengan aman, murah, dan terpercaya.
+                    Pusat jual beli Pet & Item Roblox terpercaya. Temukan pet untuk game <span class="text-purple-600 font-bold">Racing, Adopt Me, Pet Simulator</span> dan lainnya di sini!
                 </p>
                 <div class="flex justify-center gap-4 mt-8">
                     <button onclick="switchPage('beli')" class="bg-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-purple-700 transition-all">Mulai Belanja</button>
@@ -183,9 +148,9 @@
                         <p class="text-gray-500 text-sm">Transaksi diawasi langsung oleh admin. Tidak perlu khawatir ditipu.</p>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-purple-100 text-left">
-                        <i data-lucide="zap" class="text-purple-600 mb-4"></i>
-                        <h3 class="font-bold text-xl mb-2">Proses Cepat</h3>
-                        <p class="text-gray-500 text-sm">Pengiriman instan segera setelah pembayaran dikonfirmasi di chat.</p>
+                        <i data-lucide="tag" class="text-purple-600 mb-4"></i>
+                        <h3 class="font-bold text-xl mb-2">Berbagai Game</h3>
+                        <p class="text-gray-500 text-sm">Tersedia pet dari berbagai game populer Roblox dalam satu toko.</p>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-purple-100 text-left">
                         <i data-lucide="star" class="text-purple-600 mb-4"></i>
@@ -206,7 +171,7 @@
                     </button>
                 </div>
             </div>
-            <!-- Div ini akan diisi oleh JS, namun Google JS Rendering modern tetap bisa membacanya -->
+            <!-- Div ini akan diisi oleh JS -->
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div class="col-span-full py-20 text-center text-gray-400 italic">Memuat produk...</div>
             </div>
@@ -265,7 +230,7 @@
                             <i data-lucide="image"></i>
                         </button>
                         <input type="file" id="chat-file" class="hidden" accept="image/*">
-                        <input type="text" id="chat-input" class="flex-1 border rounded-xl px-4 py-2 focus:ring-2 focus:ring-purple-400 outline-none" placeholder="Tulis pesan atau tempel link gambar...">
+                        <input type="text" id="chat-input" class="flex-1 border rounded-xl px-4 py-2 focus:ring-2 focus:ring-purple-400 outline-none" placeholder="Tulis pesan...">
                         <button type="submit" class="bg-purple-600 text-white p-3 rounded-xl shadow-md hover:bg-purple-700">
                             <i data-lucide="send" class="w-5 h-5"></i>
                         </button>
@@ -314,15 +279,23 @@
 
     <!-- Modal Admin (Tambah/Edit) -->
     <div id="admin-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b flex justify-between items-center bg-gray-50">
                 <h3 id="m-title" class="font-bold text-lg">Tambah Produk</h3>
                 <button onclick="closeAdminModal()" class="text-gray-400 hover:text-red-500"><i data-lucide="x"></i></button>
             </div>
             <form id="p-form" class="p-6 space-y-4">
                 <input type="hidden" id="p-id">
+                
+                <!-- NEW: Input Tag/Game -->
+                <div class="space-y-1 bg-blue-50 p-3 rounded border border-blue-100">
+                    <label class="text-xs font-bold text-blue-600">TAG / NAMA GAME</label>
+                    <input type="text" id="in-tag" class="w-full border p-2 rounded focus:ring-1 ring-blue-500 outline-none" placeholder="Contoh: Racing, Adopt Me, dll...">
+                    <p class="text-[10px] text-gray-400">Tulis nama game asal pet ini agar pembeli tahu.</p>
+                </div>
+
                 <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-500">NAMA PET</label>
+                    <label class="text-xs font-bold text-gray-500">NAMA PET / ITEM</label>
                     <input type="text" id="in-name" required class="w-full border p-2 rounded focus:ring-1 ring-purple-500 outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -343,7 +316,7 @@
                     <label class="text-xs font-bold text-gray-500">LINK GAMBAR</label>
                     <input type="url" id="in-logo" required class="w-full border p-2 rounded focus:ring-1 ring-purple-500 outline-none" placeholder="https://...">
                 </div>
-                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-700 transition-all">SIMPAN PERUBAHAN</button>
+                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-700 transition-all">SIMPAN PRODUK</button>
             </form>
         </div>
     </div>
@@ -355,12 +328,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
-        // Added getDoc for stock checking
         import { getFirestore, collection, doc, setDoc, onSnapshot, updateDoc, deleteDoc, addDoc, query, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
-        // Added remove for chat deletion
         import { getDatabase, ref, push, onValue, off, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
-        // Konfigurasi
         const firebaseConfig = {
             apiKey: "AIzaSyAXlW-u5Bt3dylnZ3CTjn1YtV2Uba4mR0k",
             authDomain: "petrx-marketplace.firebaseapp.com",
@@ -455,14 +425,16 @@
             const list = document.getElementById('product-list');
             if (products.length === 0) return list.innerHTML = '<div class="col-span-full py-10 text-center">Belum ada stok pet.</div>';
             
-            // SEO update: Added alt tag to images for better Google Image indexing
             list.innerHTML = products.map(p => `
                 <div class="bg-white rounded-2xl border border-purple-50 overflow-hidden shadow-sm flex flex-col h-full hover:shadow-md transition-all">
                     <div class="h-40 p-4 flex items-center justify-center bg-white relative">
-                        <img src="${p.logo}" alt="Jual ${p.name} Roblox" class="max-h-full max-w-full">
+                        <img src="${p.logo}" alt="Jual ${p.name}" class="max-h-full max-w-full">
                         ${p.stock <= 0 ? '<div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold">STOK HABIS</div>' : ''}
                     </div>
                     <div class="p-4 flex flex-col flex-1">
+                        <!-- MENAMPILKAN TAG / GAME -->
+                        ${p.tag ? `<div class="mb-1"><span class="game-tag">${p.tag}</span></div>` : ''}
+                        
                         <h3 class="font-bold text-sm mb-1 break-words">${p.name}</h3>
                         <p class="text-[10px] text-gray-400 mb-2">Stok: ${p.stock}</p>
                         <p class="text-purple-600 font-bold mt-auto">Rp ${p.price.toLocaleString()}</p>
@@ -509,13 +481,13 @@
             document.getElementById('cart-summary').classList.remove('hidden');
 
             let total = 0;
-            // SEO update: Added alt tag
             list.innerHTML = cart.map((it, idx) => {
                 total += it.price * it.qty;
                 return `
                     <div class="bg-white p-4 rounded-2xl border border-purple-50 flex items-center gap-4">
                         <img src="${it.logo}" alt="${it.name}" class="w-16 h-16 object-contain">
                         <div class="flex-1">
+                            ${it.tag ? `<span class="text-[9px] text-blue-500 font-bold border border-blue-200 px-1 rounded bg-blue-50">${it.tag}</span>` : ''}
                             <h4 class="font-bold text-sm">${it.name}</h4>
                             <p class="text-purple-600 font-bold text-xs">Rp ${it.price.toLocaleString()}</p>
                         </div>
@@ -541,44 +513,38 @@
             renderCart();
         };
 
-        // MODIFIED: Reduces stock upon checkout
         window.processCheckout = async () => {
             if (!currentUser) return switchPage('login');
             
-            // 1. Kurangi Stock di Database
             for (const item of cart) {
                 try {
                     const productRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', item.id);
-                    // Ambil data terbaru untuk memastikan stock akurat
                     const snap = await getDoc(productRef);
                     if(snap.exists()) {
                         const currentStock = snap.data().stock || 0;
-                        const newStock = currentStock - item.qty;
-                        // Update jika stock mencukupi (atau biarkan minus jika itu yang diinginkan, di sini kita set min 0)
                         await updateDoc(productRef, {
-                            stock: Math.max(0, newStock)
+                            stock: Math.max(0, currentStock - item.qty)
                         });
                     }
                 } catch(err) {
-                    console.error("Gagal update stock untuk", item.name, err);
+                    console.error("Stock error", err);
                 }
             }
 
-            // 2. Kirim Pesan Konfirmasi
-            let txt = "Pesanan Baru:\n";
-            cart.forEach(it => txt += `- ${it.name} (${it.qty}x)\n`);
-            txt += `Total: ${document.getElementById('cart-total-price').innerText}`;
+            let txt = "Halo Admin, saya ingin beli:\n\n";
+            cart.forEach(it => txt += `- [${it.tag || 'Item'}] ${it.name} (${it.qty}x)\n`);
+            txt += `\nTotal: ${document.getElementById('cart-total-price').innerText}`;
+            txt += `\nMohon diproses, terima kasih!`;
+            
             await sendMessage(txt);
             
-            // Simulate Email Notif
-            console.log("Notifikasi pesanan dikirim ke babepintar123@gmail.com");
             cart = [];
             updateCartUI();
             switchPage('chat');
-            showToast("Pesanan dikonfirmasi & Stok berkurang!");
+            showToast("Pesanan dikirim ke Admin!");
         };
 
-        // CHAT SYSTEM PERBAIKAN
+        // CHAT SYSTEM
         function setupChatSystem() {
             if (!currentUser) {
                 document.getElementById('chat-messages').innerHTML = '<div class="text-center py-20">Login untuk memulai chat.</div>';
@@ -601,7 +567,6 @@
                 const data = snap.val();
                 if (!data) return;
                 const panel = document.getElementById('admin-chat-panel');
-                // MODIFIED: Added delete button for chat groups
                 panel.innerHTML = Object.keys(data).map(uid => `
                     <div class="inline-flex items-center gap-1 bg-white border border-gray-200 rounded-full pr-2">
                         <button onclick="window.selectUserChat('${uid}')" class="px-3 py-2 rounded-full text-xs font-bold ${activeChatUserId === uid ? 'text-purple-600' : 'text-gray-600'}">
@@ -620,10 +585,9 @@
             activeChatUserId = uid;
             document.getElementById('chat-target-name').innerText = `Chat dengan ${uid.substring(0,5)}`;
             loadMessages(uid);
-            loadChatUsers(); // Refresh UI selection state
+            loadChatUsers();
         };
 
-        // ADDED: Function to delete chat history
         window.deleteChat = async (uid) => {
             if(confirm("Hapus riwayat chat dengan user ini?")) {
                 try {
@@ -698,6 +662,7 @@
             e.preventDefault();
             const id = document.getElementById('p-id').value;
             const data = {
+                tag: document.getElementById('in-tag').value, // SAVING TAG
                 name: document.getElementById('in-name').value,
                 price: Number(document.getElementById('in-price').value),
                 stock: Number(document.getElementById('in-stock').value),
@@ -717,6 +682,7 @@
         window.editP = (id) => {
             const p = products.find(x => x.id === id);
             document.getElementById('p-id').value = id;
+            document.getElementById('in-tag').value = p.tag || ''; // LOADING TAG
             document.getElementById('in-name').value = p.name;
             document.getElementById('in-price').value = p.price;
             document.getElementById('in-stock').value = p.stock;
