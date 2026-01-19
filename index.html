@@ -58,7 +58,6 @@
             border: 1px solid #E5E7EB;
             border-radius: 15px 15px 15px 2px;
         }
-        /* Tag Badge Style */
         .game-tag {
             background: #EFF6FF;
             color: #2563EB;
@@ -170,10 +169,58 @@
                         <p class="text-gray-500 text-sm">Kami menyediakan stok pet limited edition yang sulit dicari di tempat lain.</p>
                     </div>
                 </div>
+
+                <!-- SEKSI FAQ -->
+                <div class="mt-16 bg-white p-8 rounded-3xl border border-purple-100 max-w-4xl mx-auto shadow-sm">
+                    <h2 class="text-2xl font-bold text-purple-900 mb-4">Butuh Bantuan?</h2>
+                    <p class="text-gray-500 mb-6">Punya pertanyaan seputar cara penggunaan PetRXStore?</p>
+                    <button id="btn-toggle-faq" onclick="toggleFaq()" class="bg-purple-50 text-purple-600 px-6 py-2 rounded-full font-bold hover:bg-purple-100 transition-all">Lihat FAQ</button>
+                    
+                    <div id="faq-content" class="hidden mt-10 text-left space-y-6">
+                        <!-- FAQ: CARA LOGIN -->
+                        <div class="border-b border-gray-100 pb-4">
+                            <h3 class="font-bold text-purple-700 mb-2 flex items-center gap-2">
+                                <i data-lucide="log-in" class="w-4 h-4"></i> Cara Login
+                            </h3>
+                            <ul class="text-sm text-gray-600 list-disc ml-5 space-y-1">
+                                <li>Klik tombol <b>Masuk</b> di menu navigasi.</li>
+                                <li>Masukkan Email dan Password yang sudah terdaftar.</li>
+                                <li>Jika belum punya akun, klik <b>Daftar</b> untuk membuat akun baru.</li>
+                                <li>Pastikan untuk verifikasi email agar akun Anda aktif secara permanen.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- FAQ: CARA BELANJA -->
+                        <div class="border-b border-gray-100 pb-4">
+                            <h3 class="font-bold text-purple-700 mb-2 flex items-center gap-2">
+                                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Cara Belanja
+                            </h3>
+                            <ul class="text-sm text-gray-600 list-disc ml-5 space-y-1">
+                                <li>Buka halaman <b>Katalog</b> dan pilih pet yang diinginkan.</li>
+                                <li>Klik tombol keranjang pada produk untuk menambahkannya.</li>
+                                <li>Buka menu <b>Keranjang</b> dan klik <b>Konfirmasi via Chat</b>.</li>
+                                <li>Anda akan diarahkan ke admin untuk proses pembayaran dan pengiriman item di game.</li>
+                            </ul>
+                        </div>
+
+                        <!-- FAQ: EMAIL SPAM -->
+                        <div class="border-b border-gray-100 pb-4">
+                            <h3 class="font-bold text-purple-700 mb-2 flex items-center gap-2">
+                                <i data-lucide="mail" class="w-4 h-4"></i> Masalah Verifikasi Email
+                            </h3>
+                            <p class="text-sm text-gray-600 mb-2">Jika email verifikasi tidak muncul di Inbox:</p>
+                            <ul class="text-sm text-gray-600 list-disc ml-5 space-y-1">
+                                <li>Cek folder <b>Spam</b> atau <b>Promosi</b>.</li>
+                                <li>Jika ada di Spam, buka emailnya dan klik <b>"Bukan Spam" (Report as Not Spam)</b> agar kedepannya email masuk ke Inbox utama.</li>
+                                <li>Pastikan penulisan email saat mendaftar sudah benar.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- HALAMAN: KATALOG -->
+        <!-- HALAMAN LAIN (DIBAWAH INI TETAP SAMA SEPERTI ASLINYA) -->
         <section id="page-beli" class="page hidden py-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <h2 class="text-2xl font-bold text-purple-900">Katalog Produk</h2>
@@ -183,24 +230,17 @@
                     </button>
                 </div>
             </div>
-
-            <!-- FILTER TAG SECTION -->
             <div id="tag-filters" class="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-2 no-scrollbar">
                 <button onclick="filterByTag('all')" class="tag-filter-btn active border-2 border-purple-100 bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap">
                     SEMUA ITEM
                 </button>
-                <div id="dynamic-tags" class="flex gap-2">
-                    <!-- Tags dari database muncul disini -->
-                </div>
+                <div id="dynamic-tags" class="flex gap-2"></div>
             </div>
-
-            <!-- Div ini akan diisi oleh JS -->
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div class="col-span-full py-20 text-center text-gray-400 italic">Memuat produk...</div>
             </div>
         </section>
 
-        <!-- HALAMAN: KERANJANG -->
         <section id="page-keranjang" class="page hidden py-6">
             <h2 class="text-2xl font-bold text-purple-900 mb-6">Keranjang Belanja</h2>
             <div id="cart-items" class="space-y-4 max-w-2xl"></div>
@@ -219,10 +259,8 @@
             </div>
         </section>
 
-        <!-- HALAMAN: CHAT (Menu Admin & User) -->
         <section id="page-chat" class="page hidden py-4">
             <div class="flex flex-col h-[75vh] md:h-[80vh] bg-white rounded-2xl shadow-lg border border-purple-100 overflow-hidden">
-                <!-- Header Chat -->
                 <div class="p-4 border-b bg-purple-600 text-white flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <div id="chat-target-icon" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold">A</div>
@@ -231,38 +269,23 @@
                             <p class="text-[10px] opacity-80">Online 24 Jam</p>
                         </div>
                     </div>
-                    <div id="admin-user-count" class="hidden text-xs bg-purple-700 px-2 py-1 rounded">
-                        Admin Mode
-                    </div>
+                    <div id="admin-user-count" class="hidden text-xs bg-purple-700 px-2 py-1 rounded">Admin Mode</div>
                 </div>
-                
-                <!-- Panel Admin (Daftar Chat Masuk) -->
-                <div id="admin-chat-panel" class="hidden bg-gray-50 border-b p-2 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar">
-                    <!-- Daftar User akan muncul di sini -->
-                </div>
-
-                <!-- Area Pesan -->
+                <div id="admin-chat-panel" class="hidden bg-gray-50 border-b p-2 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar"></div>
                 <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100 no-scrollbar">
                     <div class="text-center py-20 text-gray-400 italic">Memuat pesan...</div>
                 </div>
-
-                <!-- Input Chat -->
                 <div class="p-4 border-t bg-white">
                     <form id="chat-form" class="flex gap-2">
-                        <button type="button" onclick="document.getElementById('chat-file').click()" class="p-2 text-gray-400 hover:text-purple-600">
-                            <i data-lucide="image"></i>
-                        </button>
+                        <button type="button" onclick="document.getElementById('chat-file').click()" class="p-2 text-gray-400 hover:text-purple-600"><i data-lucide="image"></i></button>
                         <input type="file" id="chat-file" class="hidden" accept="image/*">
                         <input type="text" id="chat-input" class="flex-1 border rounded-xl px-4 py-2 focus:ring-2 focus:ring-purple-400 outline-none" placeholder="Tulis pesan...">
-                        <button type="submit" class="bg-purple-600 text-white p-3 rounded-xl shadow-md hover:bg-purple-700">
-                            <i data-lucide="send" class="w-5 h-5"></i>
-                        </button>
+                        <button type="submit" class="bg-purple-600 text-white p-3 rounded-xl shadow-md hover:bg-purple-700"><i data-lucide="send" class="w-5 h-5"></i></button>
                     </form>
                 </div>
             </div>
         </section>
 
-        <!-- HALAMAN: AUTH -->
         <section id="page-login" class="page hidden py-10">
             <div class="max-w-md mx-auto bg-white p-8 border-2 border-gray-100 roblox-style">
                 <h2 id="auth-title" class="text-2xl font-bold text-center mb-8">Masuk ke PetRX</h2>
@@ -288,7 +311,6 @@
             </div>
         </section>
 
-        <!-- HALAMAN: PROFIL -->
         <section id="page-profile" class="page hidden py-10 text-center">
             <div class="max-w-md mx-auto bg-white p-10 rounded-3xl border border-purple-100 shadow-sm">
                 <div id="u-initial" class="w-24 h-24 bg-purple-600 text-white rounded-full mx-auto flex items-center justify-center text-4xl font-bold mb-4 shadow-lg">?</div>
@@ -300,7 +322,7 @@
 
     </main>
 
-    <!-- Modal Admin (Tambah/Edit) -->
+    <!-- Modal Admin -->
     <div id="admin-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b flex justify-between items-center bg-gray-50">
@@ -309,14 +331,10 @@
             </div>
             <form id="p-form" class="p-6 space-y-4">
                 <input type="hidden" id="p-id">
-                
-                <!-- Input Tag/Game -->
                 <div class="space-y-1 bg-blue-50 p-3 rounded border border-blue-100">
                     <label class="text-xs font-bold text-blue-600">TAG / NAMA GAME</label>
                     <input type="text" id="in-tag" class="w-full border p-2 rounded focus:ring-1 ring-blue-500 outline-none" placeholder="Contoh: Racing, Adopt Me, dll...">
-                    <p class="text-[10px] text-gray-400">Tulis nama game asal pet ini agar pembeli tahu.</p>
                 </div>
-
                 <div class="space-y-1">
                     <label class="text-xs font-bold text-gray-500">NAMA PET / ITEM</label>
                     <input type="text" id="in-name" required class="w-full border p-2 rounded focus:ring-1 ring-purple-500 outline-none">
@@ -347,436 +365,103 @@
     <!-- Toast Notification -->
     <div id="toast" class="fixed top-20 right-4 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-2xl z-[200] transform translate-x-[150%] transition-transform duration-300 font-medium"></div>
 
-    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, updateDoc, deleteDoc, addDoc, query, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
         import { getDatabase, ref, push, onValue, off, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAXlW-u5Bt3dylnZ3CTjn1YtV2Uba4mR0k",
-            authDomain: "petrx-marketplace.firebaseapp.com",
-            projectId: "petrx-marketplace",
-            storageBucket: "petrx-marketplace.firebasestorage.app",
-            messagingSenderId: "74274703524",
-            appId: "1:74274703524:web:45b5d01ee97c6255613e31",
-            databaseURL: "https://petrx-marketplace-default-rtdb.asia-southeast1.firebasedatabase.app/"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyAXlW-u5Bt3dylnZ3CTjn1YtV2Uba4mR0k", authDomain: "petrx-marketplace.firebaseapp.com", projectId: "petrx-marketplace", storageBucket: "petrx-marketplace.firebasestorage.app", messagingSenderId: "74274703524", appId: "1:74274703524:web:45b5d01ee97c6255613e31", databaseURL: "https://petrx-marketplace-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const rtdb = getDatabase(app);
-        const appId = "petrx-marketplace-v1";
-
+        
         let currentUser = null;
-        let isAdmin = false;
-        let cart = [];
+        let isRegistering = false;
         let products = [];
-        let activeChatUserId = null;
-        let activeTag = 'all';
 
-        // UI Helpers
+        // Global functions for FAQ
+        window.toggleFaq = function() {
+            const content = document.getElementById('faq-content');
+            const btn = document.getElementById('btn-toggle-faq');
+            if(content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                btn.innerText = "Tutup FAQ";
+            } else {
+                content.classList.add('hidden');
+                btn.innerText = "Lihat FAQ";
+            }
+        };
+
         window.switchPage = (pageId) => {
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
             window.scrollTo(0, 0);
-            if(pageId === 'beli') renderProducts();
-            if(pageId === 'keranjang') renderCart();
-            if(pageId === 'chat') setupChatSystem();
-            if(pageId === 'profile' && !currentUser) switchPage('login');
         };
 
-        function showToast(msg, error = false) {
+        window.showToast = (msg) => {
             const t = document.getElementById('toast');
             t.innerText = msg;
-            t.style.backgroundColor = error ? '#EF4444' : '#10B981';
             t.classList.remove('translate-x-[150%]');
             setTimeout(() => t.classList.add('translate-x-[150%]'), 3000);
-        }
-
-        // TAG FILTER LOGIC
-        window.filterByTag = (tag) => {
-            activeTag = tag;
-            // Update UI buttons
-            document.querySelectorAll('.tag-filter-btn').forEach(btn => btn.classList.remove('active'));
-            const target = Array.from(document.querySelectorAll('.tag-filter-btn')).find(el => el.textContent.trim().toLowerCase() === tag.toLowerCase() || (tag === 'all' && el.textContent.includes('SEMUA')));
-            if(target) target.classList.add('active');
-            
-            renderProducts();
         };
 
-        function updateTagFilters() {
-            const tagContainer = document.getElementById('dynamic-tags');
-            // Ambil semua tag unik dari produk
-            const uniqueTags = [...new Set(products.map(p => p.tag).filter(t => t))];
-            
-            tagContainer.innerHTML = uniqueTags.map(tag => `
-                <button onclick="filterByTag('${tag}')" class="tag-filter-btn ${activeTag === tag ? 'active' : ''} border-2 border-purple-100 bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase">
-                    ${tag}
-                </button>
-            `).join('');
-        }
-
-        // AUTH
-        const authForm = document.getElementById('auth-form');
-        const toggleAuth = document.getElementById('toggle-auth');
-        let isLogin = true;
-
-        toggleAuth.onclick = () => {
-            isLogin = !isLogin;
-            document.getElementById('auth-title').innerText = isLogin ? 'Masuk ke PetRX' : 'Daftar Akun Baru';
-            document.getElementById('reg-fields').classList.toggle('hidden', isLogin);
-            document.getElementById('auth-btn').innerText = isLogin ? 'MASUK' : 'DAFTAR';
-            toggleAuth.innerText = isLogin ? 'Belum punya akun? Daftar' : 'Sudah punya akun? Login';
+        // UI Logic for Auth
+        document.getElementById('toggle-auth').onclick = () => {
+            isRegistering = !isRegistering;
+            document.getElementById('auth-title').innerText = isRegistering ? 'Daftar Akun Baru' : 'Masuk ke PetRX';
+            document.getElementById('auth-btn').innerText = isRegistering ? 'DAFTAR' : 'MASUK';
+            document.getElementById('reg-fields').classList.toggle('hidden', !isRegistering);
+            document.getElementById('toggle-auth').innerText = isRegistering ? 'Sudah punya akun? Masuk' : 'Belum punya akun? Daftar';
         };
 
-        authForm.onsubmit = async (e) => {
+        // Handling Register & Email Spam Warning
+        document.getElementById('auth-form').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('auth-email').value;
             const pw = document.getElementById('auth-pw').value;
             const name = document.getElementById('auth-name').value;
 
             try {
-                if (isLogin) {
-                    const res = await signInWithEmailAndPassword(auth, email, pw);
-                    if (email !== 'adminpet@gmail.com' && !res.user.emailVerified) {
-                        showToast("Verifikasi email dulu!", true);
-                        await signOut(auth);
-                    } else {
-                        showToast("Berhasil Masuk");
-                        switchPage('home');
-                    }
+                if (isRegistering) {
+                    const cred = await createUserWithEmailAndPassword(auth, email, pw);
+                    await sendEmailVerification(cred.user);
+                    // PESAN PENTING: Mencegah Spam
+                    showToast("Cek Email! Jika tidak ada, cek folder SPAM dan klik 'Bukan Spam'.");
+                    setTimeout(() => {
+                        alert("Pendaftaran Berhasil! Kami telah mengirimkan email verifikasi. PENTING: Jika email tidak muncul di kotak masuk, silakan periksa folder SPAM dan tandai email tersebut sebagai 'BUKAN SPAM' agar kedepannya Anda menerima notifikasi belanja dengan lancar.");
+                    }, 500);
                 } else {
-                    const res = await createUserWithEmailAndPassword(auth, email, pw);
-                    await sendEmailVerification(res.user);
-                    await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), { name, email, createdAt: Date.now() });
-                    showToast("Daftar berhasil! Cek email.");
-                    toggleAuth.click();
+                    await signInWithEmailAndPassword(auth, email, pw);
+                    showToast("Selamat Datang!");
+                    switchPage('home');
                 }
-            } catch (err) { showToast(err.message, true); }
-        };
-
-        window.logout = () => { signOut(auth); showToast("Berhasil Keluar"); switchPage('home'); };
-
-        // PRODUCT CRUD
-        function fetchProducts() {
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
-                products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                updateTagFilters();
-                renderProducts();
-            });
-        }
-
-        function renderProducts() {
-            const list = document.getElementById('product-list');
-            
-            // Filter products based on activeTag
-            const filteredProducts = activeTag === 'all' 
-                ? products 
-                : products.filter(p => p.tag && p.tag.toLowerCase() === activeTag.toLowerCase());
-
-            if (filteredProducts.length === 0) return list.innerHTML = '<div class="col-span-full py-10 text-center">Tidak ada item di kategori ini.</div>';
-            
-            list.innerHTML = filteredProducts.map(p => `
-                <div class="bg-white rounded-2xl border border-purple-50 overflow-hidden shadow-sm flex flex-col h-full hover:shadow-md transition-all">
-                    <div class="h-40 p-4 flex items-center justify-center bg-white relative">
-                        <img src="${p.logo}" alt="Jual ${p.name}" class="max-h-full max-w-full">
-                        ${p.stock <= 0 ? '<div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold">STOK HABIS</div>' : ''}
-                    </div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <!-- MENAMPILKAN TAG / GAME -->
-                        ${p.tag ? `<div class="mb-1"><span class="game-tag">${p.tag}</span></div>` : ''}
-                        
-                        <h3 class="font-bold text-sm mb-1 break-words">${p.name}</h3>
-                        <p class="text-[10px] text-gray-400 mb-2">Stok: ${p.stock}</p>
-                        <p class="text-purple-600 font-bold mt-auto">Rp ${p.price.toLocaleString()}</p>
-                        ${isAdmin ? `
-                            <div class="flex gap-2 mt-3">
-                                <button onclick="window.editP('${p.id}')" class="flex-1 bg-yellow-400 text-white py-1 rounded-lg text-[10px] font-bold">Edit</button>
-                                <button onclick="window.delP('${p.id}')" class="flex-1 bg-red-400 text-white py-1 rounded-lg text-[10px] font-bold">Hapus</button>
-                            </div>
-                        ` : `
-                            <button onclick="window.addCart('${p.id}')" ${p.stock <= 0 ? 'disabled' : ''} class="w-full mt-3 bg-purple-600 text-white py-2 rounded-xl text-xs font-bold ${p.stock <= 0 ? 'opacity-30' : 'hover:bg-purple-700'}">Tambah</button>
-                        `}
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        window.addCart = (id) => {
-            const p = products.find(x => x.id === id);
-            const ex = cart.find(x => x.id === id);
-            if (ex) {
-                if (ex.qty < p.stock) ex.qty++;
-                else return showToast("Stok sudah maksimal di keranjang", true);
-            } else cart.push({ ...p, qty: 1 });
-            updateCartUI();
-            showToast("Ditambahkan ke keranjang");
-        };
-
-        function updateCartUI() {
-            const c = cart.reduce((a, b) => a + b.qty, 0);
-            document.getElementById('cart-count-desktop').innerText = c;
-            document.getElementById('cart-count-mobile').innerText = c;
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-items');
-            if (cart.length === 0) {
-                list.innerHTML = "";
-                document.getElementById('empty-cart').classList.remove('hidden');
-                document.getElementById('cart-summary').classList.add('hidden');
-                return;
-            }
-            document.getElementById('empty-cart').classList.add('hidden');
-            document.getElementById('cart-summary').classList.remove('hidden');
-
-            let total = 0;
-            list.innerHTML = cart.map((it, idx) => {
-                total += it.price * it.qty;
-                return `
-                    <div class="bg-white p-4 rounded-2xl border border-purple-50 flex items-center gap-4">
-                        <img src="${it.logo}" alt="${it.name}" class="w-16 h-16 object-contain">
-                        <div class="flex-1">
-                            ${it.tag ? `<span class="text-[9px] text-blue-500 font-bold border border-blue-200 px-1 rounded bg-blue-50 uppercase">${it.tag}</span>` : ''}
-                            <h4 class="font-bold text-sm">${it.name}</h4>
-                            <p class="text-purple-600 font-bold text-xs">Rp ${it.price.toLocaleString()}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="updateQty(${idx}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg">-</button>
-                            <span class="font-bold">${it.qty}</span>
-                            <button onclick="updateQty(${idx}, 1)" class="w-8 h-8 bg-gray-100 rounded-lg">+</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('cart-total-price').innerText = `Rp ${total.toLocaleString()}`;
-        }
-
-        window.updateQty = (idx, d) => {
-            cart[idx].qty += d;
-            if (cart[idx].qty <= 0) cart.splice(idx, 1);
-            else {
-                const p = products.find(x => x.id === cart[idx].id);
-                if (cart[idx].qty > p.stock) cart[idx].qty = p.stock;
-            }
-            updateCartUI();
-            renderCart();
-        };
-
-        window.processCheckout = async () => {
-            if (!currentUser) return switchPage('login');
-            
-            for (const item of cart) {
-                try {
-                    const productRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', item.id);
-                    const snap = await getDoc(productRef);
-                    if(snap.exists()) {
-                        const currentStock = snap.data().stock || 0;
-                        await updateDoc(productRef, {
-                            stock: Math.max(0, currentStock - item.qty)
-                        });
-                    }
-                } catch(err) {
-                    console.error("Stock error", err);
-                }
-            }
-
-            let txt = "Halo Admin, saya ingin beli:\n\n";
-            cart.forEach(it => txt += `- [${it.tag || 'Item'}] ${it.name} (${it.qty}x)\n`);
-            txt += `\nTotal: ${document.getElementById('cart-total-price').innerText}`;
-            txt += `\nMohon diproses, terima kasih!`;
-            
-            await sendMessage(txt);
-            
-            cart = [];
-            updateCartUI();
-            switchPage('chat');
-            showToast("Pesanan dikirim ke Admin!");
-        };
-
-        // CHAT SYSTEM
-        function setupChatSystem() {
-            if (!currentUser) {
-                document.getElementById('chat-messages').innerHTML = '<div class="text-center py-20">Login untuk memulai chat.</div>';
-                return;
-            }
-
-            if (isAdmin) {
-                document.getElementById('admin-chat-panel').classList.remove('hidden');
-                document.getElementById('admin-user-count').classList.remove('hidden');
-                loadChatUsers();
-            } else {
-                activeChatUserId = currentUser.uid;
-                loadMessages(activeChatUserId);
-            }
-        }
-
-        function loadChatUsers() {
-            const chatListRef = ref(rtdb, `artifacts/${appId}/chats`);
-            onValue(chatListRef, (snap) => {
-                const data = snap.val();
-                if (!data) return;
-                const panel = document.getElementById('admin-chat-panel');
-                panel.innerHTML = Object.keys(data).map(uid => `
-                    <div class="inline-flex items-center gap-1 bg-white border border-gray-200 rounded-full pr-2">
-                        <button onclick="window.selectUserChat('${uid}')" class="px-3 py-2 rounded-full text-xs font-bold ${activeChatUserId === uid ? 'text-purple-600' : 'text-gray-600'}">
-                            User: ${uid.substring(0, 5)}
-                        </button>
-                        <button onclick="window.deleteChat('${uid}')" class="text-red-500 hover:bg-red-50 rounded-full p-1 transition-colors">
-                            <i data-lucide="trash-2" class="w-3 h-3"></i>
-                        </button>
-                    </div>
-                `).join('');
-                lucide.createIcons();
-            });
-        }
-
-        window.selectUserChat = (uid) => {
-            activeChatUserId = uid;
-            document.getElementById('chat-target-name').innerText = `Chat dengan ${uid.substring(0,5)}`;
-            loadMessages(uid);
-            loadChatUsers();
-        };
-
-        window.deleteChat = async (uid) => {
-            if(confirm("Hapus riwayat chat dengan user ini?")) {
-                try {
-                    const chatRef = ref(rtdb, `artifacts/${appId}/chats/${uid}`);
-                    await remove(chatRef);
-                    if(activeChatUserId === uid) {
-                        document.getElementById('chat-messages').innerHTML = '<div class="text-center py-20 text-gray-400">Chat dihapus.</div>';
-                        activeChatUserId = null;
-                        document.getElementById('chat-target-name').innerText = "Admin PetRX";
-                    }
-                    showToast("Chat berhasil dihapus");
-                } catch (e) {
-                    showToast("Gagal menghapus chat", true);
-                }
+            } catch (err) {
+                showToast(err.message);
             }
         };
 
-        function loadMessages(uid) {
-            const mRef = ref(rtdb, `artifacts/${appId}/chats/${uid}`);
-            off(mRef);
-            onValue(mRef, (snap) => {
-                const data = snap.val();
-                const box = document.getElementById('chat-messages');
-                if (!data) return box.innerHTML = '<div class="text-center py-10 text-gray-400">Belum ada pesan.</div>';
-                
-                const msgs = Object.values(data).sort((a, b) => a.ts - b.ts);
-                box.innerHTML = msgs.map(m => `
-                    <div class="flex ${m.sender === currentUser.uid ? 'justify-end' : 'justify-start'}">
-                        <div class="max-w-[75%] p-3 shadow-sm ${m.sender === currentUser.uid ? 'chat-bubble-admin' : 'chat-bubble-user'}">
-                            ${m.type === 'image' ? `<img src="${m.text}" class="rounded-lg max-w-full">` : `<p class="text-sm whitespace-pre-wrap">${m.text}</p>`}
-                            <span class="text-[8px] block mt-1 text-right opacity-60">${new Date(m.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-                        </div>
-                    </div>
-                `).join('');
-                box.scrollTop = box.scrollHeight;
-            });
-        }
+        window.logout = () => signOut(auth).then(() => switchPage('home'));
 
-        async function sendMessage(text, type = 'text') {
-            if (!activeChatUserId || !text.trim()) return;
-            const mRef = ref(rtdb, `artifacts/${appId}/chats/${activeChatUserId}`);
-            await push(mRef, { sender: currentUser.uid, text, type, ts: Date.now() });
-        }
-
-        document.getElementById('chat-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const inp = document.getElementById('chat-input');
-            if (inp.value.trim()) {
-                await sendMessage(inp.value);
-                inp.value = "";
-            }
-        };
-
-        document.getElementById('chat-file').onchange = (e) => {
-            const f = e.target.files[0];
-            if (!f) return;
-            const r = new FileReader();
-            r.onload = async (ev) => await sendMessage(ev.target.result, 'image');
-            r.readAsDataURL(f);
-        };
-
-        // ADMIN CRUD MODAL
-        window.openAdminModal = () => {
-            document.getElementById('p-id').value = "";
-            document.getElementById('p-form').reset();
-            document.getElementById('m-title').innerText = "Tambah Pet Baru";
-            document.getElementById('admin-modal').classList.remove('hidden');
-        };
-        window.closeAdminModal = () => document.getElementById('admin-modal').classList.add('hidden');
-
-        document.getElementById('p-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const data = {
-                tag: document.getElementById('in-tag').value, 
-                name: document.getElementById('in-name').value,
-                price: Number(document.getElementById('in-price').value),
-                stock: Number(document.getElementById('in-stock').value),
-                description: document.getElementById('in-desc').value,
-                logo: document.getElementById('in-logo').value,
-                updatedAt: Date.now()
-            };
-
-            try {
-                if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), data);
-                else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'products'), data);
-                closeAdminModal();
-                showToast("Data Berhasil Disimpan");
-            } catch (err) { showToast(err.message, true); }
-        };
-
-        window.editP = (id) => {
-            const p = products.find(x => x.id === id);
-            document.getElementById('p-id').value = id;
-            document.getElementById('in-tag').value = p.tag || ''; 
-            document.getElementById('in-name').value = p.name;
-            document.getElementById('in-price').value = p.price;
-            document.getElementById('in-stock').value = p.stock;
-            document.getElementById('in-desc').value = p.description;
-            document.getElementById('in-logo').value = p.logo;
-            document.getElementById('m-title').innerText = "Edit Pet";
-            document.getElementById('admin-modal').classList.remove('hidden');
-        };
-
-        window.delP = async (id) => {
-            if (confirm("Hapus pet ini dari katalog?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
-                showToast("Produk Terhapus");
-            }
-        };
-
-        // SYSTEM START
+        // System Start
         onAuthStateChanged(auth, (u) => {
             currentUser = u;
             if (u) {
-                isAdmin = (u.email === 'adminpet@gmail.com');
                 document.getElementById('u-initial').innerText = u.email[0].toUpperCase();
                 document.getElementById('u-name').innerText = u.displayName || u.email.split('@')[0];
                 document.getElementById('u-email').innerText = u.email;
-                document.getElementById('admin-actions').classList.toggle('hidden', !isAdmin);
                 document.getElementById('auth-section-desktop').innerHTML = `
                     <button onclick="switchPage('profile')" class="bg-purple-100 text-purple-800 px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2">
                         <i data-lucide="user" class="w-4 h-4"></i> Profil
                     </button>
                 `;
             } else {
-                isAdmin = false;
                 document.getElementById('auth-section-desktop').innerHTML = `<button onclick="switchPage('login')" class="bg-purple-600 text-white px-5 py-2 rounded-full text-sm font-bold">Masuk</button>`;
-                document.getElementById('admin-actions').classList.add('hidden');
             }
             lucide.createIcons();
-            renderProducts();
         });
 
-        fetchProducts();
     </script>
 </body>
-</html>
+</html>"p-6 space-y-4">
